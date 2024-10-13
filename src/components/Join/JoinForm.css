@@ -1,17 +1,19 @@
-.form{
+
+.form {
     width: 400px;
-    margin : 100px auto;
-    padding: 36px 48px 48px 48px;
-    background-color: lightgray;
+    margin: 100px auto;
+    padding: 36px 48px;
+    background-color: white; /* Changed to white for better contrast */
     border-radius: 11px;
-    box-shadow: 0 2.4rem 4.8rem lightgray;
+    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.join-title{
+.join-title {
     padding: 15px;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px; /* Increased size for better visibility */
+    font-weight: 700; /* Bolder font weight */
     text-align: center;
+    color: #3a9f97; /* Green color for the title */
 }
 
 .join-form {
@@ -23,25 +25,29 @@
 .join-form label {
     display: block;
     margin-bottom: 8px;
+    font-weight: 600; /* Bolder for better readability */
 }
 
 .join-form input {
     width: 100%;
     padding: 1.2rem;
     border-radius: 9px;
-    border: none;
+    border: 1px solid #ccc; /* Border for better input visibility */
+    transition: border-color 0.3s; /* Transition for border color change */
 }
 
 .join-form input:focus {
     outline: none;
-    box-shadow: 0 0 0 4px lightgray;
+    border-color: #3a9f97; /* Green border on focus */
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2); /* Green shadow on focus */
 }
 
 .btn--form {
-    background-color: lightseagreen;
+    background-color:#3a9f97; /* Green button */
     color: white;
     align-self: end;
-    padding: 8px;
+    padding: 12px; /* Increased padding for a better look */
+    font-size: 18px; /* Adjusted font size */
 }
 
 .btn,
@@ -59,10 +65,29 @@
 }
 
 .btn-join:hover {
-    outline: 1px solid lightskyblue;
+    outline: 1px solid #85C1AE; /* Lighter green outline on hover */
 }
 
 .btn--form:hover {
-    background-color: red;
+    background-color: #3a9f97; /* Darker green on hover */
     color: white;
+}
+
+
+.file-input-label {
+    display: inline-block;
+    background-color: white;
+    color: black;
+    padding: 8px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+.file-input-label:hover {
+    background-color: red;
 }

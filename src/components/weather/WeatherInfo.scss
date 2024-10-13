@@ -1,41 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-
 #weatherInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: 'Noto Sans KR', sans-serif;
-  margin-top: 20px;
-  h2 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+  margin-top: 50px;
+  background-color: #ffffff; // 배경색
+  border-radius: 10px; // 모서리 둥글게
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // 그림자 추가
+
+  h4 {
+    margin-bottom: 10px;
+    margin-top: 30px;
   }
 
   #parentRegionSelect,
   #childRegionSelect {
-    width: 200px;
-    padding: 10px;
-    margin: 10px;
+    width: 220px;
+    padding: 12px;
+    margin: 12px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #b3e5c8; // Lighter green borders
+    border-radius: 6px;
     appearance: none;
-    background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%23333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><path d="M6 9l6-6M6 15l6-6"/></svg>') no-repeat right 10px center;
-    background-color: #f9f9f9;
+    background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="%23737f74" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><path d="M6 9l6-6M6 15l6-6"/></svg>') no-repeat right 10px center;
+    background-color: #f1f8f4;
     cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   #parentRegionSelect:focus,
   #childRegionSelect:focus {
     border-color: #66afe9;
     outline: none;
-    box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+    box-shadow: 0 0 6px rgba(102, 175, 233, 0.7);
   }
 
   #weatherInfoText {
-    margin-top: 20px;
+    margin-top: 24px;
     text-align: center;
     font-size: 18px;
     color: #333;
@@ -44,36 +45,46 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      border: 1px solid #d1e7dd; 
+      border-radius: 8px;
+      padding: 20px;
+      background-color: #fafdfc; 
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05); 
+      margin-bottom: 10px;
     }
 
     .weather-detail {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      margin: 10px 0;
-      font-size: 1rem;
+      margin: 12px 0;
+      font-size: 1.1rem;
       color: #555;
     }
 
     .weather-label {
-      font-weight: bold;
-      color: #0073e6;
-      margin-right: 10px;
-      width: 100px; /* 필드 이름의 고정 너비 설정 /
-      text-align: right; / 필드 이름을 오른쪽 정렬 /
+      font-weight: 600;
+      color: #006944; // Darker green for labels
+      margin-right: 12px;
+      width: 110px; 
+      text-align: right;
     }
 
     .weather-value {
       flex-grow: 1;
-      text-align: left; / 데이터 값을 왼쪽 정렬 */
+      text-align: left;
     }
+  }
+
+  #weatherSyncIcon {
+    font-size: 26px;
+    color: #33a3a3; // Light green for the loading icon
+    margin-top: 12px;
+    animation: spin 1.5s linear infinite; // Smooth spinning animation
   }
 }
 
-
-
-  #weatherSyncIcon {
-    font-size: 24px;
-    color: #333;
-    margin-top: 10px;
-  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

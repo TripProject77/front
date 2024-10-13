@@ -1,17 +1,18 @@
-.form{
+.form {
     width: 400px;
-    margin : 100px auto;
-    padding: 36px 48px 48px 48px;
-    background-color: rgb(129, 173, 232);
+    margin: 100px auto;
+    padding: 36px 48px;
+    background-color: white; /* White background for consistency */
     border-radius: 11px;
-    box-shadow: 0 2.4rem 4.8rem lightgray;
+    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
-.login-title{
+.login-title {
     padding: 15px;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px; /* Increased font size */
+    font-weight: 700; /* Bolder font weight */
     text-align: center;
+    color: #3a9f97; /* Green title color */
 }
 
 .login-form {
@@ -23,25 +24,29 @@
 .login-form label {
     display: block;
     margin-bottom: 8px;
+    font-weight: 600; /* Bolder label text */
 }
 
 .login-form input {
     width: 100%;
     padding: 1.2rem;
     border-radius: 9px;
-    border: none;
+    border: 1px solid #ccc; /* Light border for inputs */
+    transition: border-color 0.3s; /* Smooth transition for border color */
 }
 
 .login-form input:focus {
     outline: none;
-    box-shadow: 0 0 0 4px lightgray;
+    border-color: #3a9f97; /* Green border on focus */
+    box-shadow: #3a9f97; /* Green shadow on focus */
 }
 
 .btn--form {
-    background-color: lightseagreen;
+    background-color: #3a9f97; /* Green button background */
     color: white;
     align-self: end;
-    padding: 8px;
+    padding: 12px; /* Increased padding for buttons */
+    font-size: 18px; /* Adjusted font size */
 }
 
 .btn,
@@ -59,10 +64,26 @@
 }
 
 .btn-login:hover {
-    outline: 1px solid lightskyblue;
+    outline: 1px solid #3a9f97; 
 }
 
 .btn--form:hover {
-    background-color: red;
+    background-color: #3a9f97; 
     color: white;
+}
+
+/* 회원가입 링크 스타일 */
+.signup-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #3a9f97; /* Green color for the link */
+    font-weight: 600;
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s ease-in-out;
+}
+
+.signup-link:hover {
+    color: #285f58; /* Darker green on hover */
+    text-decoration: underline; /* Underline on hover */
 }

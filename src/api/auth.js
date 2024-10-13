@@ -59,4 +59,6 @@ export const addReplyComment = (id, replyingToCommentId, data) => api.post(`/com
 
 export const uploadImage = () => api.get(`/file/upload`)
 
-export const updateImage = (username, uploadedImageUrl) => api.post(`/user/${username}/${uploadedImageUrl}/updateImage`);
+export const getImage = (username) => api.get(`/file/${username}/image`);
+
+export const uploadProfileImage = (username, data) => api.post(`/file/uploadProfileImage/${username}`, data);

@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as auth from '../../api/auth';
 import Header from '../Header/Header';
 import './PostInfo.css';
+import { GoTriangleRight } from "react-icons/go";
+
 
 
 const PostInfo = () => {
@@ -283,6 +285,10 @@ const PostInfo = () => {
         navigate(`/post`)
     };
 
+    const handleMap = () => {
+        navigate(`/kakao/search`, { state: { place: postInfo.place } });
+    };
+    
     return (
         <>
          <Header/>
@@ -292,7 +298,7 @@ const PostInfo = () => {
                 <h1 className='post-title'>{postInfo.title}</h1>
                 
                 <div className='post-meta'>
-                    <span className='post-author'>작성자: {postInfo.writer}</span>
+                    <span className='post-author'>작성자: {postInfo.writer}  <GoTriangleRight /> <span className='profileInfo'>프로필 확인</span></span>
                     <span className='post-count'>조회수: {postInfo.count}</span>
                 </div>
         
@@ -304,7 +310,7 @@ const PostInfo = () => {
 
             <hr/>
 
-            <div className="info-box">
+            <div className="info-box" onClick={handleMap}>
                 <span><CiCalendar />  {postInfo.startDate} ~ {postInfo.endDate}</span>
                 <span><FaLocationDot /> {postInfo.place}</span>
             </div>
