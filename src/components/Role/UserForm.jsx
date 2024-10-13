@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './UserForm.css';
+import * as auth from '../../api/auth';
 
 export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
-    
-    const defaultProfileImage = 'http://localhost:8080/file/basic.png'; // 기본 프로필 이미지 경로
 
-    const [profileImage, setProfileImage] = useState(
-        userInfo?.profileImage || defaultProfileImage
-    );
-
-    const [selectedFile, setSelectedFile] = useState(null); 
+    const [profileImage, setProfileImage] = useState(null);
 
     // 사용자 정보 업데이트 핸들러
     const onUpdate = (e) => {
@@ -19,51 +13,15 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
         const username = form.username.value;
         const name = form.name.value;
         const email = form.email.value;
-        const role = form.role?.value;
 
-        updateUser({ username, name, email, role });
+        updateUser({ username, name, email });
     };
 
     useEffect(() => {
-        if (userInfo) {
-            setProfileImage(
-                userInfo.profileImage ? `http://localhost:8080/${userInfo.profileImage}` : defaultProfileImage
-            );
+        if (userInfo?.username) {
+            fetchProfileImage(userInfo.username);
         }
     }, [userInfo]);
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-
-        if (file) {
-            setSelectedFile(file); 
-        }
-    };
-
-    const handleFileUpload = async () => {
-        if (!selectedFile) return;
-
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('username', userInfo.username);
-
-        try {
-            // Send the file to the server
-            const response = await axios.post('http://localhost:8080/file/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            // Update the user's profile image
-            setProfileImage(response.data); 
-            updateUser({ ...userInfo, profileImage: response.data }); 
-            alert('프로필 이미지가 변경되었습니다.');
-        } catch (error) {
-            console.error('Failed to upload image:', error);
-            alert('이미지 업로드에 실패했습니다.');
-        }
-    };
 
     // 날짜 형식 변환 함수
     const formatDate = (dateStr) => {
@@ -74,39 +32,71 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
         return `${year}-${month}-${day}`;
     };
 
+    // 사용자 이미지 불러오기
+    const fetchProfileImage = async (username) => {
+        try {
+            const response = await auth.getImage(username); 
+            const data = response.data;
+            console.log("Fetched image URL:", data.url);
+            setProfileImage(data.url);
+        } catch (error) {
+            console.error("Error fetching profile image:", error);
+        }
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0]; // 선택한 파일 가져오기
+
+        if (file) {
+            try {
+                const formData = new FormData(); // FormData 객체 생성
+                formData.append('file', file); // FormData에 파일 추가
+
+                const response = await auth.uploadProfileImage(userInfo.username, formData);
+
+                setProfileImage(`${response.data.url}?t=${new Date().getTime()}`); // URL에 쿼리 파라미터 추가
+
+                console.log("Profile image updated:", response.data.url);
+            } catch (error) {
+                console.error("Failed to upload profile image:", error);
+            }
+        }
+    };
+
     return (
         <div className="userInfoContainer">
+            {/* 왼쪽 이미지 영역 */}
             <div className="userProfile">
-                <img
-                    src={profileImage}
-                    alt="Profile"
-                    className="profileImage"
-                />
-                <div className="buttonContainer">
-                    <label htmlFor="profileUpload" className="uploadLabel">프로필 변경</label>
-                    <input
-                        type="file"
-                        id="profileUpload"
-                        name="profileUpload"
-                        className="uploadInput"
-                        accept="image/*"
-                        onChange={handleFileChange}
+                {profileImage ? (
+                    <img 
+                        src={profileImage} 
+                        alt="Profile" 
+                        className="profileImage" 
                     />
-
-                    <button className="uploadButton" onClick={handleFileUpload}>
-                        이미지 저장
-                    </button>
-
-                </div>
+                ) : (
+                    <p>프로필 이미지를 불러올 수 없습니다.</p>
+                )}
+                {/* 이미지 업로드 버튼 */}
+                <label htmlFor="uploadInput" className="uploadLabel">
+                    프로필 이미지 변경
+                </label>
+                <input
+                    type="file"
+                    id="uploadInput"
+                    className="uploadInput"
+                    onChange={handleFileChange} // 파일 변경 핸들러 추가
+                />
             </div>
 
+            {/* 오른쪽 사용자 정보 폼 영역 */}
             <div className="userInfoForm">
-                <h2 className="userInfo-title" style={{ marginBottom: "30px" }}> {userInfo?.name} 님의 정보</h2>
+                <h2 className="userInfo-title">
+                    {userInfo?.name} 님의 정보
+                </h2>
 
                 <form className='userInfo-form' onSubmit={onUpdate}>
-                    {/* 사용자 정보 폼 */}
                     <div>
-                        <label htmlFor='username'>username</label>
+                        <label htmlFor='username'>Username</label>
                         <input
                             type="text"
                             id='username'
@@ -120,7 +110,7 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
                     </div>
 
                     <div>
-                        <label htmlFor='name'>name</label>
+                        <label htmlFor='name'>Name</label>
                         <input
                             type="text"
                             id='name'
@@ -133,7 +123,7 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
                     </div>
 
                     <div>
-                        <label htmlFor='email'>email</label>
+                        <label htmlFor='email'>Email</label>
                         <input
                             type="email"
                             id='email'
@@ -147,7 +137,7 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
 
                     <div>
                         <label htmlFor='role'>
-                            등급 : {userInfo?.role === 'ROLE_USER' ? '일반 사용자' : '관리자'}
+                            Role : {userInfo?.role === 'ROLE_USER' ? '일반 사용자' : '관리자'}
                         </label>
                     </div>
 
@@ -157,15 +147,14 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
                         </label>
                     </div>
 
-                    <button type='submit' className='userInfoBtn userInfoBtn--form'>정보 수정</button>
+                    <button type='submit' className='userInfoBtn userInfoBtn--form'>
+                        정보 수정
+                    </button>
                     <button
                         type='button'
                         className='userInfoBtn userInfoBtn--form'
-                        onClick={() => deleteUser(userInfo.username)}
-                    >
+                        onClick={() => deleteUser(userInfo.username)}>
                         회원 탈퇴
-                   
-
                     </button>
                 </form>
             </div>

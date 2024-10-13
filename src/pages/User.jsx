@@ -69,9 +69,6 @@ const User = () => {
         }
     };
 
-
-    
-
     useEffect(() => {
 
         if (isLogin) {

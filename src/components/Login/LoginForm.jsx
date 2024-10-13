@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { LoginContext } from '../../contexts/LoginContextProvider'
 import './LoginForm.css'
+import { Link } from 'react-router-dom'
 
 const LoginForm = () => {
 
@@ -49,6 +50,8 @@ const LoginForm = () => {
                 login >Login</button>
 
             </form>
+            <Link to="/join" className="signup-link">회원가입</Link>
+        
 
 
         </div>

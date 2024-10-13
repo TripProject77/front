@@ -54,7 +54,6 @@ const WeatherInfo = () => {
 
     return (
         <div id="weatherInfo">
-            <h2>날씨를 확인하세요 !</h2>
             <select id="parentRegionSelect" onChange={handleParentRegionChange} value={selectedParentRegion}>
                 <option value="">지역 선택</option>
                 {[...new Set(regions.map(region => region.parentRegion))].map((parent) => (
@@ -70,7 +69,7 @@ const WeatherInfo = () => {
                 </select>
             )}
             <div id="weatherInfoText">
-                {loading ? '날씨 정보를 불러오는 중...' : weatherInfo ? (
+                {loading ? '날씨를 확인하세요 !' : weatherInfo ? (
                     <div className="weather-details">
                         <div className="weather-detail">
                             <span className="weather-label">온도:</span>

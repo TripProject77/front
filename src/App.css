@@ -215,3 +215,55 @@ button:hover {
 }
 
 
+.card-container {
+  display: flex;
+  flex-direction: column; 
+  gap: 20px; 
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 1600px;
+}
+
+.card h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.icon {
+  vertical-align: middle; /* Ensures the icons align with the text */
+  margin-right: 5px; /* Optional: Adds some space between the icon and text */
+}
+.card p {
+  display: flex; /* Align icon and text horizontally */
+  align-items: center; /* Vertically center align */
+  font-size: 16px;
+  margin-bottom: 13px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between; /* Align writer on the left, rest on the right */
+  align-items: center;
+  font-size: 14px;
+  color: #888;
+}
+
+.card-footer p {
+  display: flex; /* Align icon and text horizontally in footer */
+  align-items: center; /* Vertically center align */
+}
+
+.card-footer .right-info {
+  display: flex;
+  gap: 15px; 
+}
+
+.card:hover {
+  transform: scale(1.05); 
+}
+

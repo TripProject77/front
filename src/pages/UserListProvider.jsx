@@ -42,8 +42,11 @@ export const UserListProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        getUserList();
+        if (userList.length === 0) {
+            getUserList();
+        }
     }, []);
+    
 
     return (
         <UserListContext.Provider value={{ userList, getUserList, deleteUser }}>
