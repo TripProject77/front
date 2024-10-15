@@ -61,4 +61,7 @@ export const uploadImage = () => api.get(`/file/upload`)
 
 export const getImage = (username) => api.get(`/file/${username}/image`);
 
+export const getPostImage = (postId) => api.get(`/file/${postId}/postImage`);
+
+
 export const uploadProfileImage = (username, data) => api.post(`/file/uploadProfileImage/${username}`, data);

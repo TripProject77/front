@@ -65,6 +65,7 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
 
     return (
         <div className="userInfoContainer">
+
             {/* 왼쪽 이미지 영역 */}
             <div className="userProfile">
                 {profileImage ? (
@@ -88,7 +89,7 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
                 />
             </div>
 
-            {/* 오른쪽 사용자 정보 폼 영역 */}
+            {/* 오른쪽 사용자 정보 영역 */}
             <div className="userInfoForm">
                 <h2 className="userInfo-title">
                     {userInfo?.name} 님의 정보

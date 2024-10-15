@@ -18,16 +18,10 @@
 }
 
 .containerAbout p {
-  
-  margin: 30px; /* 아래 여백 */
+  margin: 30px;
 }
 
-hr { 
-  margin-bottom: 50px; 
-  border: 1px solid #ccc;
-}
-
-/* 게시판 제목과 버튼 레이아웃 */
+/* 제목과 버튼 컨테이너 */
 .title-button-container {
   display: flex;
   justify-content: space-between;
@@ -40,12 +34,12 @@ hr {
   font-size: 32px;
 }
 
-/* 버튼 위치를 오른쪽 정렬 */
 .title-button-container button {
   font-family: 'TTLaundryGothicB';
   font-size: 16px;
 }
 
+/* 테이블 스타일 */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -55,9 +49,10 @@ table {
 td {
   padding: 30px;
   font-size: 16px;
-  vertical-align: middle; /* 모든 셀의 내용을 가운데 정렬 */
+  vertical-align: middle;
 }
 
+/* 버튼 스타일 */
 button {
   padding: 10px 20px;
   background-color: lightseagreen;
@@ -67,14 +62,13 @@ button {
   cursor: pointer;
   font-family: 'TTLaundryGothicB';
   font-size: 16px;
-  vertical-align: middle; /* 버튼도 가운데 정렬 */
 }
 
 button:hover {
   background-color: lightseagreen;
 }
 
-
+/* 입력 필드와 텍스트 에어리어 스타일 */
 .input-field, .textarea-field {
   width: 100%;
   padding: 8px;
@@ -87,17 +81,18 @@ button:hover {
   resize: none;
 }
 
+/* 테이블 셀 스타일 */
 .table-cell {
   padding: 30px 0;
   text-align: center;
   vertical-align: middle;
-  height: 50px;  /* 모든 셀의 높이를 동일하게 지정 */
+  height: 50px;
 }
 
-
+/* 제목과 버튼 정렬 */
 .title-button-container {
   display: flex;
-  justify-content: space-between; /* 왼쪽에 h1, 오른쪽에 검색 폼과 버튼 */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -105,26 +100,26 @@ button:hover {
 .title-button-container h2 {
   font-size: 32px;
   font-family: 'TTLaundryGothicB';
-  margin-right: auto; /* 왼쪽에 위치 */
+  margin-right: auto;
 }
 
-
-/* -------------- post 페이지 css -------------- */
-
+/* 검색 및 버튼 컨테이너 */
 .search-and-button-container {
   display: flex;
   align-items: center;
 }
 
+/* 검색 폼 스타일 */
 .search-form {
   margin-right: 10px;
 }
 
-.search-input {
+.search-input, .date-input {
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
+  margin-right: 10px;
 }
 
 .search-button {
@@ -134,14 +129,13 @@ button:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 10px;
 }
 
 .search-button:hover {
   background-color: lightseagreen;
 }
 
-/* 새 글 작성 버튼 */
+/* 새 글 작성 버튼 스타일 */
 .title-button-container button {
   font-family: 'TTLaundryGothicB';
   font-size: 16px;
@@ -157,23 +151,24 @@ button:hover {
   background-color: lightseagreen;
 }
 
+/* 페이지네이션 스타일 */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;  /* 화면에 고정 */
-  bottom: 0;        /* 화면의 하단에 위치 */
-  left: 0;          /* 화면의 왼쪽에 맞춤 */
-  width: 100%;      /* 전체 화면 너비를 차지 */
-  background-color: white; /* 배경색 지정 */
-  padding: 10px;    /* 패딩 추가 */
-  z-index: 1000;    /* 다른 요소들 위에 표시 */
-  border-top: 1px solid #ccc;  /* 위쪽에 경계선 추가 */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 10px;
+  z-index: 1000;
+  border-top: 1px solid #ccc;
 }
 
 .pagination li {
   margin: 0 5px;
-  list-style: none;  /* 점 제거 */
+  list-style: none;
 }
 
 .pagination a {
@@ -210,60 +205,79 @@ button:hover {
 
 .pagination-prev:hover, .pagination-next:hover {
   color: white;
-  font-size: calc(16px + 1px);  /* 글자 크기 1px 증가 */
-  transition: font-size 0.2s ease-in-out;  
+  font-size: calc(16px + 1px);
+  transition: font-size 0.2s ease-in-out;
 }
 
-
+/* 카드 컨테이너 */
 .card-container {
   display: flex;
-  flex-direction: column; 
-  gap: 20px; 
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
 }
 
+/* 카드 스타일 */
 .card {
   border: 1px solid #ccc;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 1600px;
+  width: calc(25% - 20px);
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
-.card h3 {
-  font-size: 20px;
-  margin-bottom: 15px;
+/* 카드 텍스트 및 아이콘 정렬 */
+.card p {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  margin-bottom: 13px;
+  margin-top: 13px;
 }
 
 .icon {
-  vertical-align: middle; /* Ensures the icons align with the text */
-  margin-right: 5px; /* Optional: Adds some space between the icon and text */
-}
-.card p {
-  display: flex; /* Align icon and text horizontally */
-  align-items: center; /* Vertically center align */
-  font-size: 16px;
-  margin-bottom: 13px;
+  margin-right: 5px;
+  vertical-align: middle;
 }
 
+/* 카드 푸터 */
 .card-footer {
   display: flex;
-  justify-content: space-between; /* Align writer on the left, rest on the right */
+  justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #888;
 }
 
 .card-footer p {
-  display: flex; /* Align icon and text horizontally in footer */
-  align-items: center; /* Vertically center align */
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-size: 14px;
 }
 
 .card-footer .right-info {
   display: flex;
-  gap: 15px; 
+  gap: 10px;
 }
 
+/* 카드 호버 효과 */
 .card:hover {
-  transform: scale(1.05); 
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
 }
 
+.postImage {
+  width: 340px;
+  height: 200px;
+  display: flex;           
+  justify-content: center;   
+  align-items: center;      
+  background-color: #f0f0f0; 
+  object-fit: cover;         
+  overflow: hidden;          
+}
