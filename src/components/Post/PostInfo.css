@@ -208,6 +208,19 @@
   margin-bottom: 20px;
 }
 
+.Image {
+  border: 2px none;
+  border-radius: 8px;
+  background-color: #f5efef;
+  padding: 10px;
+  display: flex;           
+  justify-content: center;   
+  align-items: center;      
+  background-color: #f0f0f0; 
+  object-fit: cover;         
+  overflow: hidden; 
+}
+
 .info-box span {
   display: block;
   margin-bottom: 5px;

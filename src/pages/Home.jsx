@@ -50,32 +50,21 @@ const Home = () => {
         <>
             <Header />
             <div className='container'>
-                <div className="home-slider">
-                    <Slider {...settings}>
-                        <div className="slide">
-                            <div className="home-wrapper">
-                                <div className="home-title">
-                                    <span>가보자Go</span>에 오신걸 환영합니다
-                                </div>
-                                <div className="home-contents">
-                                    함께 떠날 동행을 구해보세요 !<PiBackpackDuotone /><br/>
-                                </div>
-                                <button className="write-post-btn" onClick={goToPostForm}>
-                                    동행 게시판
-                                </button>
-                            </div>
-                        </div>
-                        <div className="slide">
-                            <div className="home-wrapper">
-                                자유롭게 게시판에 글을 작성하고📝<br/>
-                                댓글로 여러 의견을 나눠보세요✏️
-                                <button className="write-post-btn" onClick={goToPost77}>
-                                    자유 게시판
-                                </button>
-                            </div>
-                        </div>
-                    </Slider>
+            <div className="home-wrapper">
+
+                <div className="home-title">
+                    <span>가보자Go</span>에 오신걸 환영합니다
                 </div>
+                
+                <div className="home-contents">
+                    동행을 구해 함께 여행을 떠나보세요 !
+                </div>
+
+                <button className="write-post-btn" onClick={goToPostForm}>
+                    가보자Go
+                </button>
+
+            </div>
                 <div className='layout-container'>
                     <div className='home-container'>
                         <h3>최근 동행 게시글</h3><br/>

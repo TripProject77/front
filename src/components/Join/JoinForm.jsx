@@ -22,6 +22,7 @@ const JoinForm = ({ join }) => {
             name: name,
             email: email
         };
+        
         formData.append("user", new Blob([JSON.stringify(user)], { type: "application/json" }));
 
         // 선택된 이미지 파일 추가

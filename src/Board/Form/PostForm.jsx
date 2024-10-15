@@ -11,13 +11,17 @@ import { usePostSave } from './PostSaveProvider';
 const PostForm = () => {
     const { isLogin, userInfo } = useContext(LoginContext);
     const navigate = useNavigate();
+    const postSave = usePostSave();
 
     const [startDate, setStartDate] = useState(); // 여행 시작 일
-    const [endDate, setEndDate] = useState(); // 여행 마치는 일
+    const [endDate, setEndDate] = useState(); // 여행 마지막 일
 
-    const [tags, setTags] = useState([]); // 태그들을 관리할 state
-    const [inputValue, setInputValue] = useState(''); // 입력 필드의 값을 관리할 state
-    const postSave = usePostSave();
+    const [tags, setTags] = useState([]); // 태그 관리
+    const [inputValue, setInputValue] = useState(''); // 입력 필드의 값 관리
+    
+    // 이미지 저장 
+    const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState('Choose a file');
 
     const onPost = (e) => {
         e.preventDefault(); // submit 기본 동작 방지
@@ -31,6 +35,9 @@ const PostForm = () => {
         // 날짜를 가져오고 포맷
         const startDate = form.startDate.value;
         const endDate = form.endDate.value;
+        const people = form.people.value;
+
+        const formData = new FormData();
 
         // JSON 형태로 변환
         const postData = {
@@ -41,12 +48,20 @@ const PostForm = () => {
             place,
             startDate,
             endDate,
-            tags
+            tags,
+            people
         };
+
+        formData.append("postData", new Blob([JSON.stringify(postData)], { type: "application/json" }));
+
+       // 선택된 이미지 파일 추가
+        if (file) {
+            formData.append("file", file);
+        }
 
         console.log(postData);
         
-        postSave(postData);
+        postSave(formData);
     };
 
     // 날짜 선택 핸들러
@@ -73,9 +88,18 @@ const PostForm = () => {
         }
     };
 
-    // 태그 삭제 핸들러
+    // 태그 삭제
     const handleDeleteTag = (indexToDelete) => {
         setTags(tags.filter((_, index) => index !== indexToDelete));
+    };
+
+    const onFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        
+        if (selectedFile) {
+            setFile(selectedFile);
+            setFileName(selectedFile.name);
+        }
     };
 
     useEffect(() => {
@@ -90,25 +114,26 @@ const PostForm = () => {
         <div>
             <Header />
             <div className='post-insert-form'>
-                <h1>게시글 등록</h1>
+                <h1>동행 모집 게시글 작성</h1>
                 <hr />
                 <form onSubmit={onPost}>
                     <table>
                         <tbody>
                             <tr>
-                                <td>여행일정</td>
+                                <td>여행기간</td>
                                 <td>
                                     <Calendar
                                         onChange={changeDate}
                                         selectRange={true}
                                         formatDay={(locale, date) => moment(date).format('DD')}
                                     />
+
                                     <div className='date-input-container'>
                                         <input
                                             type='text'
                                             className='start-date'
                                             name='startDate'
-                                            placeholder='출발하는 날짜'
+                                            placeholder='출발일'
                                             value={startDate || ''}
                                             disabled
                                         />
@@ -116,7 +141,7 @@ const PostForm = () => {
                                             type='text'
                                             className='end-date'
                                             name='endDate'
-                                            placeholder='돌아오는 날짜'
+                                            placeholder='귀국일'
                                             value={endDate || ''}
                                             disabled
                                         />
@@ -164,6 +189,37 @@ const PostForm = () => {
                                         placeholder='내용을 입력하세요'
                                         required
                                     />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>모집인원</td>
+                                <td>
+                                    <input
+                                        type = 'number'
+                                        id='people'
+                                        name='people'
+                                        className='input-field'
+                                        required
+                                    />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>게시글 이미지</td>
+                                <td>
+                                <input 
+                                    type="file"
+                                    id='file'
+                                    name='file'
+                                    accept="image/*"
+                                    onChange={onFileChange}
+                                    style={{ display: 'none' }}
+                                />
+
+                                <label htmlFor="file" className="file-input-label btn btn--form">
+                                    {fileName}
+                                </label>
                                 </td>
                             </tr>
 

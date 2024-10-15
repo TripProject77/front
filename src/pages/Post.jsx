@@ -10,10 +10,7 @@ import { TbPencilCheck } from "react-icons/tb";
 import { CiCalendar } from "react-icons/ci";
 import { LuSubtitles } from "react-icons/lu";
 
-
-
 const Post = () => {
-
     const navigate = useNavigate(); 
 
     const [postList, setPostList] = useState([]); 
@@ -22,8 +19,14 @@ const Post = () => {
     const [searchTerm, setSearchTerm] = useState(''); 
     const [filteredPosts, setFilteredPosts] = useState([]);
 
+    const [startDate, setStartDate] = useState(''); // 필터링할 시작 날짜
+    const [endDate, setEndDate] = useState(''); // 필터링할 종료 날짜
+
     const [currentPage, setCurrentPage] = useState(0);
     const postsPerPage = 8;
+
+    // 각 게시글의 이미지 상태를 관리하기 위한 상태 추가
+    const [postImages, setPostImages] = useState({});
 
     const getPostList = async () => {
         try {
@@ -31,6 +34,11 @@ const Post = () => {
             const data = response.data;
             setPostList(data);  
             setFilteredPosts(data); 
+
+            // 게시글 목록을 가져온 후 각 게시글의 이미지를 불러옴
+            data.forEach(post => {
+                fetchPostImage(post.id); // 각 게시글의 이미지를 비동기로 불러옴
+            });
         } catch (error) {
             console.error('Failed to fetch post list:', error);
         }
@@ -63,10 +71,20 @@ const Post = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        const filtered = postList.filter(post => 
-            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            post.content.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        
+        const filtered = postList.filter(post => {
+            const postDate = new Date(post.createdDate); // 게시글 작성 날짜
+            const isWithinDateRange = (
+                (!startDate || postDate >= new Date(startDate)) && 
+                (!endDate || postDate <= new Date(endDate))
+            );
+            const matchesSearchTerm = (
+                post.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                post.content.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            return isWithinDateRange && matchesSearchTerm; 
+        });
+
         setFilteredPosts(filtered);
         setCurrentPage(0); 
     };
@@ -87,6 +105,17 @@ const Post = () => {
         setCurrentPage(selected);
     };
 
+    // 게시글의 이미지를 서버에서 가져오는 함수
+    const fetchPostImage = async (postId) => {
+        try {
+            const response = await auth.getPostImage(postId); 
+            const imageUrl = response.data.url;
+            setPostImages(prevImages => ({ ...prevImages, [postId]: imageUrl }));
+        } catch (error) {
+            console.error("Error fetching post image:", error);
+        }
+    };
+
     return (
         <>
             <Header />
@@ -104,6 +133,18 @@ const Post = () => {
                                 placeholder="키워드를 입력하세요" 
                                 className="search-input" 
                             />
+                            <input 
+                                type="date" 
+                                value={startDate} 
+                                onChange={(e) => setStartDate(e.target.value)} 
+                                className="date-input" 
+                            />
+                            <input 
+                                type="date" 
+                                value={endDate} 
+                                onChange={(e) => setEndDate(e.target.value)} 
+                                className="date-input" 
+                            />
                             <button type="submit" className="search-button">
                                 검색
                             </button>
@@ -114,29 +155,45 @@ const Post = () => {
                     </div>
                 </div>
 
-                <hr/>
+                <hr style={{marginBottom : "50px;"}} />
 
                 <div className="card-container">
                     {currentPagePosts.map((post, index) => (
                         <div key={index} className="card" onClick={() => handleCardClick(post.id)}>
-                            <p><LuSubtitles className="icon" /> {post.title}</p>
-                            
-                            <p><MdContentPaste className="icon" /> {post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content}</p>
-                            
-                            <p><CiCalendar className="icon" /> {post.startDate} ~ {post.endDate}</p>
-                            
-                            <div className="card-footer">
+                            <div>
+                                <p><LuSubtitles className="icon" /> {post.title}</p>
+                                <div className="card-footer">
                                 <p><TbPencilCheck className="icon" /> {post.writer}</p>
+                                
                                 <div className="right-info">
                                     <p>{formatDate(post.createdDate)}</p>
                                     <p>조회수: {post.count}</p>
                                 </div>
-                            
+
+                                </div>
+                                <p style={{fontSize:"12px", color:"gray"}}><CiCalendar className="icon" /> {post.startDate} ~ {post.endDate}</p>
+                                
+                                <hr className='postHr'></hr>
                             </div>
+
+                            <div className="postImage">
+                                {postImages[post.id] ? (
+                                    <img 
+                                        src={postImages[post.id]} 
+                                        alt="postImage" 
+                                        className="postImage" 
+                                    />
+                                ) : (
+                                    <p>이미지를 불러올 수 없습니다.</p>
+                                )}
+                            </div>
+
+                            <p className='postContent'><MdContentPaste className="icon" /> {post.content.length > 100 ? post.content.substring(0, 100) + "..." : post.content}</p>
+                            
+                            
                         </div>
                     ))}
                 </div>
-
 
                 <ReactPaginate
                     previousLabel={"이전"}

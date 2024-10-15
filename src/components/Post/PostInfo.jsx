@@ -25,6 +25,7 @@ const PostInfo = () => {
     const [replyComment, setReplyComment] = useState('');  // 대댓글 입력 상태
     const [replyingToCommentId, setReplyingToCommentId] = useState(null);  // 대댓글 작성 중인 댓글 ID
 
+    const [postImage, setPostImage] = useState(null);
 
     console.log(id);
 
@@ -250,12 +251,25 @@ const PostInfo = () => {
         return `${year}-${month}-${day} ${hours}:${minutes}`;
     };
 
+    const fetchPostImage = async (postId) => {
+        try {
+            const response = await auth.getPostImage(postId); 
+            const data = response.data;
+            console.log("Fetched image URL:", data.url);
+            setPostImage(data.url);
+        } catch (error) {
+            console.error("Error fetching post image:", error);
+        }
+    };
+
 
     useEffect(() => {
         if (id) {
             getPostInfo(id);
             getCommentsList(id);
+            fetchPostImage(id);
         }
+
         getUserInfo();
     }, [id]);
 
@@ -286,7 +300,7 @@ const PostInfo = () => {
     };
 
     const handleMap = () => {
-        navigate(`/kakao/search`, { state: { place: postInfo.place } });
+        navigate(`/kakao/search`, { state: { mapPlace: postInfo.place } });
     };
     
     return (
@@ -315,12 +329,31 @@ const PostInfo = () => {
                 <span><FaLocationDot /> {postInfo.place}</span>
             </div>
 
+            <div className="Image">
+                {postImage ? (
+                    <img 
+                        src={postImage} 
+                        alt="postImage" 
+                        className="postImage" 
+                    />
+                ) : (
+                    <p>이미지를 불러올 수 없습니다.</p>
+                )}
+            </div>
+
+            <br/>
+
             <div className='post-content'>
-                <p>여행 소개</p><br/>
+                <p>[ 여행 소개 ]</p><br/>
                 <p>{postInfo.content}</p>
             </div>
 
             <hr/>
+
+
+            <div>
+                <p>안녕</p>
+            </div>
 
             <div className='hash-tag'>
                 <ul>
@@ -333,6 +366,7 @@ const PostInfo = () => {
                 )}
                 </ul>
             </div>
+
 
             <div className='post-buttons'>
                 <button type='submit' className='btn--post' onClick={handleEditClick}>게시글 수정</button>

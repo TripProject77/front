@@ -32,8 +32,8 @@ const Header = () => {
                 <button className="dropbtn" onClick={toggleDropdown}>게시판</button>
                 {dropdownOpen && (
                   <div className="dropdown-content">
-                    <Link to="/postCom">동행모집</Link>
-                    <Link to="/post">자유게시판</Link>
+                    <Link to="/post77">자유 게시판</Link>
+                    <Link to="/post">동행 게시판</Link>
                   </div>
                 )}
               </li>
