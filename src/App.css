@@ -1,18 +1,12 @@
 @font-face {
-  font-family: 'TTLaundryGothicB';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/TTLaundryGothicB.woff2') format('woff2');
+  font-family: 'Malgun Gothic';
+  src: local('Malgun Gothic'), url('https://fonts.googleapis.com/css2?family=Malgun+Gothic:wght@400;700&display=swap') format('woff2');
   font-weight: 700;
   font-style: normal;
 }
 
-.container {
-  font-family: 'TTLaundryGothicB';
-  width: 1600px;
-  margin: 50px auto;
-}
-
-.containerAbout {
-  font-family: 'TTLaundryGothicB';
+.container, .containerAbout {
+  font-family: 'Malgun Gothic', sans-serif;
   width: 1600px;
   margin: 50px auto;
 }
@@ -21,7 +15,12 @@
   margin: 30px;
 }
 
-/* 제목과 버튼 컨테이너 */
+hr { 
+  margin-bottom: 50px; 
+  border: 1px solid #ccc;
+}
+
+/* 게시판 제목과 버튼 레이아웃 */
 .title-button-container {
   display: flex;
   justify-content: space-between;
@@ -34,12 +33,13 @@
   font-size: 32px;
 }
 
+/* 버튼 위치를 오른쪽 정렬 */
 .title-button-container button {
-  font-family: 'TTLaundryGothicB';
+  font-family: 'Malgun Gothic', sans-serif;
   font-size: 16px;
+  background-color: #3a9f97;
 }
 
-/* 테이블 스타일 */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -49,26 +49,27 @@ table {
 td {
   padding: 30px;
   font-size: 16px;
-  vertical-align: middle;
+  vertical-align: middle; /* 모든 셀의 내용을 가운데 정렬 */
+  background-color: #f4f2f0;
 }
 
-/* 버튼 스타일 */
 button {
   padding: 10px 20px;
-  background-color: lightseagreen;
+  background-color: #2b7d72;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'TTLaundryGothicB';
+  font-family: 'Malgun Gothic', sans-serif;
   font-size: 16px;
+  vertical-align: middle; /* 버튼도 가운데 정렬 */
 }
 
 button:hover {
-  background-color: lightseagreen;
+  background-color:#2b7d72;
 }
 
-/* 입력 필드와 텍스트 에어리어 스타일 */
+
 .input-field, .textarea-field {
   width: 100%;
   padding: 8px;
@@ -81,203 +82,23 @@ button:hover {
   resize: none;
 }
 
-/* 테이블 셀 스타일 */
 .table-cell {
   padding: 30px 0;
   text-align: center;
   vertical-align: middle;
-  height: 50px;
+  height: 50px;  /* 모든 셀의 높이를 동일하게 지정 */
 }
 
-/* 제목과 버튼 정렬 */
+
 .title-button-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* 왼쪽에 h1, 오른쪽에 검색 폼과 버튼 */
   align-items: center;
   margin-bottom: 20px;
 }
 
 .title-button-container h2 {
   font-size: 32px;
-  font-family: 'TTLaundryGothicB';
-  margin-right: auto;
-}
-
-/* 검색 및 버튼 컨테이너 */
-.search-and-button-container {
-  display: flex;
-  align-items: center;
-}
-
-/* 검색 폼 스타일 */
-.search-form {
-  margin-right: 10px;
-}
-
-.search-input, .date-input {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  margin-right: 10px;
-}
-
-.search-button {
-  padding: 10px 20px;
-  background-color: lightseagreen;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.search-button:hover {
-  background-color: lightseagreen;
-}
-
-/* 새 글 작성 버튼 스타일 */
-.title-button-container button {
-  font-family: 'TTLaundryGothicB';
-  font-size: 16px;
-  padding: 10px 20px;
-  background-color: lightseagreen;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.title-button-container button:hover {
-  background-color: lightseagreen;
-}
-
-/* 페이지네이션 스타일 */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: white;
-  padding: 10px;
-  z-index: 1000;
-  border-top: 1px solid #ccc;
-}
-
-.pagination li {
-  margin: 0 5px;
-  list-style: none;
-}
-
-.pagination a {
-  font-family: 'TTLaundryGothicB';
-  font-size: 16px;
-  padding: 10px 15px;
-  color: lightseagreen;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.pagination a:hover {
-  background-color: lightseagreen;
-  color: white;
-}
-
-.active a {
-  background-color: lightseagreen;
-  color: white;
-}
-
-.pagination-prev, .pagination-next {
-  font-family: 'TTLaundryGothicB';
-  font-size: 16px;
-  padding: 10px 20px;
-  color: lightseagreen;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.pagination-prev:hover, .pagination-next:hover {
-  color: white;
-  font-size: calc(16px + 1px);
-  transition: font-size 0.2s ease-in-out;
-}
-
-/* 카드 컨테이너 */
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start;
-}
-
-/* 카드 스타일 */
-.card {
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: calc(25% - 20px);
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-/* 카드 텍스트 및 아이콘 정렬 */
-.card p {
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-  margin-bottom: 13px;
-  margin-top: 13px;
-}
-
-.icon {
-  margin-right: 5px;
-  vertical-align: middle;
-}
-
-/* 카드 푸터 */
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: #888;
-}
-
-.card-footer p {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  font-size: 14px;
-}
-
-.card-footer .right-info {
-  display: flex;
-  gap: 10px;
-}
-
-/* 카드 호버 효과 */
-.card:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease-in-out;
-}
-
-.postImage {
-  width: 340px;
-  height: 200px;
-  display: flex;           
-  justify-content: center;   
-  align-items: center;      
-  background-color: #f0f0f0; 
-  object-fit: cover;         
-  overflow: hidden;          
+  font-family: 'Malgun Gothic', sans-serif;
+  margin-right: auto; /* 왼쪽에 위치 */
 }

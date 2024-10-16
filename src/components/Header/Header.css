@@ -1,10 +1,9 @@
-/* 기본 스타일 */
 header {
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    /* border-bottom: 1px solid #000;  헤더와 페이지를 구분짓는 선 제거 */
 }
 
 .logo {
@@ -12,21 +11,20 @@ header {
     align-items: center;
 }
 
-/* 텍스트 로고 스타일 */
 .logo-text {
-    font-size: 50px; /* 텍스트 로고 사이즈 키우기 */
+    font-size: 40px; 
     font-weight: bold;
     color: #3a9f97;
-    transition: color 0.3s ease; /* 색상 전환 효과 */
-    font-family: 'TTLaundryGothicB', sans-serif; /* 폰트 변경 */
+    transition: color 0.3s ease; 
+    font-family: 'TTLaundryGothicB', sans-serif; 
 }
 
 .logo-text:hover {
-    color: #3a9f97; /* 마우스 오버 시 연두색으로 변경 */
+    color: #3a9f97; 
 }
 
 @font-face {
-    font-family: 'Malgun Gothic'; /* 기존 폰트 삭제 및 맑은 고딕체 사용 */
+    font-family: 'Malgun Gothic'; 
     src: local('Malgun Gothic'), url('https://fonts.googleapis.com/css2?family=Malgun+Gothic:wght@400;700&display=swap') format('woff2');
     font-weight: 700;
     font-style: normal;
@@ -37,50 +35,50 @@ header {
     justify-content: space-between;
     align-items: center;
     column-gap: 12px;
-    font-family: 'Malgun Gothic', sans-serif; /* 폰트 변경 */
+    font-family: 'Malgun Gothic', sans-serif; 
 }
 
 .util ul li {
     padding: 0px 20px;
 }
 
-/* 로그아웃 버튼을 다른 링크와 비슷하게 스타일링 */
+
 .btn-logout {
     background: none;
     border: none;
     color: #000;
     cursor: pointer;
-    font-family: 'Malgun Gothic', sans-serif; /* 폰트 변경 */
+    font-family: 'Malgun Gothic', sans-serif; 
     padding: 0;
     margin: 0;
     font-size: 20px;
-    transition: color 0.3s ease; /* 색상 전환 효과 */
+    transition: color 0.3s ease; 
 }
 
 .btn-logout:hover {
-    color: #868377; /* 마우스 오버 시 색상 변경 */
+    color: #868377; 
 }
 
-/* 드롭다운 스타일 */
+
 .dropdown {
     position: relative;
     display: inline-block;
 }
 
 .dropbtn {
-    background-color: transparent; /* 투명 배경 유지 */
+    background-color: transparent; 
     color: #000;
     border: none;
-    font-family: 'Malgun Gothic', sans-serif; /* 폰트 변경 */
+    font-family: 'Malgun Gothic', sans-serif; 
     font-size: 20px;
     cursor: pointer;
     padding: 10px 20px;
-    transition: color 0.3s ease; /* 색상 전환 효과 */
+    transition: color 0.3s ease; 
 }
 
 .dropbtn:hover {
-    color: #868377; /* 마우스 오버 시 텍스트 색상만 변경 */
-    background-color: transparent; /* 배경색 변화 없도록 설정 */
+    color: #868377; 
+    background-color: transparent; 
 }
 
 .dropdown-content {
@@ -91,7 +89,7 @@ header {
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     border-radius: 5px;
-    font-family: 'Malgun Gothic', sans-serif; /* 폰트 변경 */
+    font-family: 'Malgun Gothic', sans-serif; 
 }
 
 .dropdown-content a {
@@ -100,15 +98,15 @@ header {
     text-decoration: none;
     display: block;
     font-size: 18px;
-    font-family: 'Malgun Gothic', sans-serif; /* 폰트 변경 */
+    font-family: 'Malgun Gothic', sans-serif; 
 }
 
 .dropdown-content a:hover {
     background-color: #f1f1f1;
-    color: #868377; /* 마우스 오버 시 텍스트 색상만 변경 */
+    color: #868377; 
 }
 
-/* 드롭다운 활성화 시 보여주기 */
+
 .dropdown:hover .dropdown-content {
     display: block;
 }
