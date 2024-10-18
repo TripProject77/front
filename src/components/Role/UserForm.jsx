@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./UserForm.css";
 import * as auth from "../../api/auth";
+import "./UserForm.css";
 
 export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -143,12 +143,12 @@ export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
             </label>
           </div>
 
-          <button type="submit" className="userInfoBtn userInfoBtn--form">
+          <button type="submit" className="userInfoBtn--form">
             정보 수정
           </button>
           <button
             type="button"
-            className="userInfoBtn userInfoBtn--form"
+            className="userInfoBtn--form"
             onClick={() => deleteUser(userInfo.username)}
           >
             회원 탈퇴

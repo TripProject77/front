@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { CiCalendar } from "react-icons/ci";
 import { FaLocationDot } from "react-icons/fa6";
+import { GoTriangleRight } from "react-icons/go";
 import { useNavigate, useParams } from "react-router-dom";
 import * as auth from "../../api/auth";
 import Header from "../Header/Header";
 import "./PostInfo.css";
-import { GoTriangleRight } from "react-icons/go";
+
 
 const PostInfo = () => {
   const navigate = useNavigate();
@@ -21,7 +22,14 @@ const PostInfo = () => {
 
   const [postImage, setPostImage] = useState(null);
 
+  const [showButtons, setShowButtons] = useState(false);
+
+
   console.log(id);
+
+  const toggleButtons = () => {
+    setShowButtons(!showButtons);
+  };
 
   // 현재 로그인 한 사용자 정보 ( 삭제 권한을 체크하기 위함 )
   const getUserInfo = async () => {
@@ -269,7 +277,17 @@ const PostInfo = () => {
 
       <div className="postInfo_container">
         <div className="post-header">
-          <h1 className="post-title">{postInfo.title}</h1>
+          <div className="title-inventory">
+            <h3 className="post-title">{postInfo.title}</h3>
+            
+            <button
+              type="button"
+              className="btn--toggle"
+              onClick={toggleButtons}
+            >
+              ···
+            </button>
+          </div>
 
           <div className="post-meta">
             <span className="post-author">
@@ -286,6 +304,10 @@ const PostInfo = () => {
         </div>
 
         <hr />
+
+        {postInfo.postCategory !== "free" && (
+          <h5 style={{marginBottom:"10px"}}>여행 일정</h5>
+        )}
 
         {postInfo.postCategory !== "free" && (
           <div className="info-box" onClick={handleMap}>
@@ -309,12 +331,26 @@ const PostInfo = () => {
         <br />
 
         <div className="post-content">
-          <p>[ 여행 소개 ]</p>
+
+          {postInfo.postCategory !== "free" && (
+            <h5>여행 소개</h5>
+          )}
+
           <br />
           <p>{postInfo.content}</p>
         </div>
 
         <hr />
+
+        {postInfo.postCategory !== "free" && (
+          <>
+            <h5 style={{marginBottom:"15px"}}>참여중인 동행</h5>
+            <div className="participation">
+              
+                
+            </div>
+          </>
+        )}
 
         {postInfo.postCategory !== "free" && (
           <div className="hash-tag">
@@ -324,12 +360,18 @@ const PostInfo = () => {
                   <li key={index}>#{tag}</li>
                 ))
               ) : (
-                <p>해시태그가 없습니다.</p>
+                <p style={{fontSize:"12px"}}>해시태그가 없습니다.</p>
               )}
             </ul>
           </div>
         )}
 
+<div>
+      {/* --- 버튼, 클릭하면 버튼들이 토글됩니다 */}
+      
+
+      {/* 버튼들, 상태에 따라 표시 */}
+      {showButtons && (
         <div className="post-buttons">
           <button type="submit" className="btn--post" onClick={handleEditClick}>
             게시글 수정
@@ -345,6 +387,8 @@ const PostInfo = () => {
             게시글 목록
           </button>
         </div>
+      )}
+    </div>
 
         <div className="comments-section">
           <form onSubmit={handleCommentSubmit} className="comment-form">

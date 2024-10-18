@@ -2,22 +2,22 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import LoginContextProvider from "./contexts/LoginContextProvider";
-import Home from "./pages/Home";
-import User from "./pages/User";
-import Login from "./pages/Login";
-import Join from "./pages/Join";
-import Post from "./pages/Post";
-import Admin from "./pages/Admin";
 import PostForm from "./Board/Form/PostForm";
-import FreePostForm from "./Board/Form/freePostForm";
-import PostInfo from "./components/Post/PostInfo";
 import { PostSaveProvider } from "./Board/Form/PostSaveProvider";
-import { UserListProvider } from "./pages/UserListProvider";
-import PostUpdateForm from "./components/Role/PostUpdateForm";
-import PostComInfo from "./components/PostCom/PostComInfo";
-import PostCom from "./pages/postCom";
+import FreePostForm from "./Board/Form/freePostForm";
 import KakaoMap from "./components/Map/KakaoMap";
+import PostInfo from "./components/Post/PostInfo";
+import PostComInfo from "./components/PostCom/PostComInfo";
+import PostUpdateForm from "./components/Role/PostUpdateForm";
+import LoginContextProvider from "./contexts/LoginContextProvider";
+import Admin from "./pages/Admin";
+import Home from "./pages/Home";
+import Join from "./pages/Join";
+import Login from "./pages/Login";
+import Post from "./pages/Post";
+import PostCom from "./pages/PostCom";
+import User from "./pages/User";
+import { UserListProvider } from "./pages/UserListProvider";
 
 const App = () => {
   return (

@@ -20,7 +20,6 @@
 }
 
 .post-title {
-  font-size: 28px;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -49,19 +48,38 @@
 }
 
 /* 게시글 내용 */
-.post-content {
-  font-size: 16px;
+.post-content p {
+  font-size: 15px;
   line-height: 1.6;
   margin-bottom: 20px;
   height: 200px; 
-  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 */
+  overflow-y: auto;
 }
 
-/* 버튼들을 오른쪽으로 배치 */
-.post-buttons {
-  margin-top: 20px;
+.title-inventory {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+/* --- 버튼 스타일링 */
+.btn--toggle {
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 5px;
+  border: none;
+  background-color: white;
+}
+
+.btn--toggle:hover {
+  font-size: 20px;
+}
+
+/* 버튼 컨테이너 오른쪽 정렬 */
+.post-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .btn--post {
@@ -72,13 +90,14 @@
   border-radius: 8px;
   cursor: pointer;
   font-family: 'TTLaundryGothicB';
-  font-size: 16px;
+  font-size: 12px;
   margin: 10px 5px;
   transition: background-color 0.3s ease;
 }
 
 .btn--post:hover {
-  background-color: lightseagreen;
+  background-color: white;
+  color: lightseagreen;
 }
 
 
@@ -105,19 +124,21 @@
 
 .btn--comment-submit {
   align-self: flex-end;
-  padding: 5px 10px;  /* 버튼 크기 조정 */
-  border-radius: 4px; /* 버튼 모서리 둥글게 */  background-color: lightseagreen;
+  padding: 10px 20px;
+  background-color: lightseagreen;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-family: 'TTLaundryGothicB';
+  font-size: 12px;
+  margin: 10px 5px;
   transition: background-color 0.3s ease;
-  margin-right: 10px;
 }
 
 .btn--comment-submit:hover {
-  background-color: lightseagreen;
+  background-color: white;
+  color: lightseagreen;
 }
 
 
@@ -208,17 +229,27 @@
   margin-bottom: 20px;
 }
 
+.participation {
+  border: 2px none;
+  padding: 25px;
+  border-radius: 8px;
+  background-color: #f5efef;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
 .Image {
   border: 2px none;
   border-radius: 8px;
   background-color: #f5efef;
   padding: 10px;
-  display: flex;           
-  justify-content: center;   
-  align-items: center;      
-  background-color: #f0f0f0; 
+  display: flex;              
   object-fit: cover;         
   overflow: hidden; 
+  width: 100%; /* 이미지 너비를 카드 크기에 맞게 설정 */
+  height: 200px; /* 이미지 비율을 유지하면서 높이 자동 조정 */
+  max-height: 150px; /* 이미지 최대 높이 설정 */
+  margin-bottom: 10px; /* 이미지와 카드 내용 사이의 간격 */
 }
 
 .info-box span {
