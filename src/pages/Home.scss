@@ -286,6 +286,12 @@ $max-width: 1600px;
 .email {
   font-size: 14px; 
   color: #666; 
+  margin-bottom: 2px;
+}
+
+.home-participation {
+  font-size: 14px; 
+  color: lightblue; 
 }
 
 .logout-button {
@@ -339,8 +345,6 @@ $max-width: 1600px;
 .signup-text a:hover {
   text-decoration: underline; 
 }
-
-
 
 .place-container {
   border-radius: 10px;
