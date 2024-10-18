@@ -53,23 +53,6 @@ td {
   background-color: #f4f2f0;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #2b7d72;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Malgun Gothic', sans-serif;
-  font-size: 16px;
-  vertical-align: middle; /* 버튼도 가운데 정렬 */
-}
-
-button:hover {
-  background-color:#2b7d72;
-}
-
-
 .input-field, .textarea-field {
   width: 100%;
   padding: 8px;

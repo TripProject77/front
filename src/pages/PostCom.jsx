@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
-import ReactPaginate from "react-paginate";
-import { Link, useNavigate } from "react-router-dom";
-import * as auth from "../api/auth";
-import "./PostCom.css";
-import Header from "../components/Header/Header";
+import { LuSubtitles } from "react-icons/lu";
 import { MdContentPaste } from "react-icons/md";
 import { TbPencilCheck } from "react-icons/tb";
-import { LuSubtitles } from "react-icons/lu";
+import ReactPaginate from "react-paginate";
+import { useNavigate } from "react-router-dom";
+import * as auth from "../api/auth";
+import Header from "../components/Header/Header";
+import "./PostCom.css";
 
 // 자유 게시판
 const Post = () => {
@@ -158,8 +158,8 @@ const Post = () => {
                   </p>
 
                   <div className="right-info">
-                    <p>{formatDate(post.createdDate)}</p>
-                    <p>조회수: {post.count}</p>
+                  <p style={{ fontSize: "12px", color: "gray" }}> - {formatDate(post.createdDate)}</p>
+                  <p style={{ fontSize: "12px", color: "gray" }}>조회수: {post.count}</p>
                   </div>
                 </div>
 

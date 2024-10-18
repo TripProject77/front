@@ -1,8 +1,9 @@
-import React, { useEffect, useReducer } from "react";
 import axios from "axios";
+import React, { useEffect, useReducer } from "react";
+import { useLocation } from "react-router-dom";
 import "./KakaoMap.css";
-import { useLocation, useNavigate } from "react-router-dom";
 
+// 여러 상태 객체 선언
 const initialState = {
   keyword: "",
   results: [],
@@ -14,6 +15,7 @@ const initialState = {
   infowindow: null,
 };
 
+// 상태 업데이트 함수
 const reducer = (state, action) => {
   switch (action.type) {
     case "SET_KEYWORD":
@@ -40,8 +42,10 @@ const reducer = (state, action) => {
 const KakaoMap = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const location = useLocation();
-  const { place } = location.state || {};
-  console.log(place);
+
+  const { mapPlace } = location.state || {};
+  console.log(mapPlace);
+  console.log(typeof mapPlace);  // 여행 장소 
 
   // 검색 엔터키 처리
   const handleKeyPress = (e) => {
@@ -51,17 +55,20 @@ const KakaoMap = () => {
   };
 
   const handleSearch = async () => {
+
     dispatch({ type: "SET_ERROR", payload: "" });
+
+    // 빈 검색에 예외처리
     if (!state.keyword.trim()) {
       dispatch({ type: "SET_ERROR", payload: "검색어를 입력하세요." });
       return;
     }
 
     try {
-      const response = await axios.get("/kakao/search", {
-        params: { keyword: state.keyword },
-      });
+      const response = await axios.get("/kakao/search", { params: { keyword: state.keyword }});
+
       dispatch({ type: "SET_RESULTS", payload: response.data.documents });
+
       if (state.map) {
         displayPlaces(response.data.documents);
       }
@@ -164,9 +171,9 @@ const KakaoMap = () => {
   useEffect(() => {
     const script = document.createElement("script");
 
-    script.src =
-      "https://dapi.kakao.com/v2/maps/sdk.js?appkey=b0fbfc88ec237a284330f2cece3d72c4&libraries=services"; // 지도띄우기
+    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=b0fbfc88ec237a284330f2cece3d72c4&libraries=services"; // 지도띄우기
     script.async = true;
+
     script.onload = () => {
       const container = document.getElementById("map");
       getCurrentPosition();
@@ -177,9 +184,17 @@ const KakaoMap = () => {
           new window.kakao.maps.LatLng(33.450701, 126.570667),
         level: 3,
       };
+
       const newMap = new window.kakao.maps.Map(container, options);
       dispatch({ type: "SET_MAP", payload: newMap });
+
+      if (mapPlace && mapPlace.x && mapPlace.y) {
+        const position = new window.kakao.maps.LatLng(mapPlace.y, mapPlace.x);
+        addMarker(position, mapPlace.place_name);  // 마커 추가
+        newMap.setCenter(position);  // 해당 위치로 지도의 중심 이동
+      }
     };
+
     document.head.appendChild(script);
 
     return () => {
@@ -188,12 +203,13 @@ const KakaoMap = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (state.map && state.currentPosition) {
-      state.map.setCenter(state.currentPosition);
-      addMarker(state.currentPosition, "현재 위치");
-    }
-  }, [state.map, state.currentPosition]);
+  // 현재위치 지도에 표시
+  // useEffect(() => {
+  //   if (state.map && state.currentPosition) {
+  //     state.map.setCenter(state.currentPosition);
+  //     addMarker(state.currentPosition, "현재 위치");
+  //   }
+  // }, [state.map, state.currentPosition]);
 
   const addToFavorites = (place) => {
     dispatch({ type: "ADD_FAVORITE", payload: place });

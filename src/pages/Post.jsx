@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
-import ReactPaginate from "react-paginate";
-import { Link, useNavigate } from "react-router-dom";
-import * as auth from "../api/auth";
-import "./Post.css";
-import Header from "../components/Header/Header";
-import { TbPencilCheck } from "react-icons/tb";
 import { CiCalendar } from "react-icons/ci";
 import { LuSubtitles } from "react-icons/lu";
+import { TbPencilCheck } from "react-icons/tb";
+import ReactPaginate from "react-paginate";
+import { useNavigate } from "react-router-dom";
+import * as auth from "../api/auth";
+import Header from "../components/Header/Header";
+import "./Post.css";
 
 // 동행 게시판
 const Post = () => {
@@ -76,13 +76,14 @@ const Post = () => {
     e.preventDefault();
 
     const filtered = postList.filter((post) => {
-      const postDate = new Date(post.createdDate); // 게시글 작성 날짜
+
       const isWithinDateRange =
-        (!startDate || postDate >= new Date(startDate)) &&
-        (!endDate || postDate <= new Date(endDate));
+        (!startDate || startDate >= post.startDate) && (!endDate || endDate <= post.endDate);
+
       const matchesSearchTerm =
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         post.content.toLowerCase().includes(searchTerm.toLowerCase());
+
       return isWithinDateRange && matchesSearchTerm;
     });
 
@@ -164,7 +165,7 @@ const Post = () => {
               onClick={() => handleCardClick(post.id)}
             >
               <div>
-              <p>
+                <p>
                   <LuSubtitles className="icon" /> {post.title}
                 </p>
                 <div className="card-footer">
@@ -176,10 +177,11 @@ const Post = () => {
                   <CiCalendar className="icon" /> {post.startDate} ~{" "}
                   {post.endDate}
                 </p>
+                <p style={{ fontSize: "12px", color: "gray" }}> - {formatDate(post.createdDate)}</p>
 
                 <hr className="postHr"></hr>
                 <div className="right-info">
-                  <p>작성일: {formatDate(post.createdDate)}</p>
+                  
                   <p>조회수: {post.count}</p>
                 </div>
               </div>
