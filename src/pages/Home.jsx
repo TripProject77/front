@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { CiCalendar } from "react-icons/ci";
+import { HiOutlineLocationMarker } from "react-icons/hi";
+import { LuSubtitles } from "react-icons/lu";
+import { Link, useNavigate } from "react-router-dom";
 import * as auth from "../api/auth";
 import Header from "../components/Header/Header";
-import { useNavigate } from "react-router-dom";
-import "./Home.scss";
 import WeatherInfo from "../components/weather/weather";
-import { CiCalendar } from "react-icons/ci";
-import { LuSubtitles } from "react-icons/lu";
-import { HiOutlineLocationMarker } from "react-icons/hi";
 import { LoginContext } from "../contexts/LoginContextProvider";
+import "./Home.scss";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -196,12 +195,16 @@ const Home = () => {
                   <div className="userInfo">
                     <p className="username">{userInfo.username}</p>
                     <p className="email">{userInfo.email}</p>
+                    <p className="home-participation"><span>동행 모집 </span>  <span></span></p>
                   </div>
                 </div>
+
                 <button className="logout-button" onClick={() => logout()}>
                   로그아웃
                 </button>
-              </div>
+            
+            </div>
+            
             ) : (
               <div className="non-login-wrapper">
                 <p className="info-text">

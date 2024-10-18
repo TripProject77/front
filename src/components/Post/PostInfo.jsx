@@ -306,7 +306,7 @@ const PostInfo = () => {
         <hr />
 
         {postInfo.postCategory !== "free" && (
-          <h5 style={{marginBottom:"10px"}}>여행 일정</h5>
+            <h5 style={{marginBottom:"10px"}}>여행 일정</h5>
         )}
 
         {postInfo.postCategory !== "free" && (
@@ -344,11 +344,13 @@ const PostInfo = () => {
 
         {postInfo.postCategory !== "free" && (
           <>
+          <div className="travel-itinerary">
             <h5 style={{marginBottom:"15px"}}>참여중인 동행</h5>
-            <div className="participation">
-              
-                
-            </div>
+            <button className="participation-button">동행 참여</button>
+          </div>
+          <div className="participation">
+
+          </div>
           </>
         )}
 

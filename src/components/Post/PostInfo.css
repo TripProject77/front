@@ -47,6 +47,25 @@
   margin-right: 20px;
 }
 
+.travel-itinerary {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.participation-button {
+  padding: 5px 12px;
+  background-color: lightseagreen;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 10px 5px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 15px;
+}
+
 /* 게시글 내용 */
 .post-content p {
   font-size: 15px;
@@ -71,10 +90,6 @@
   background-color: white;
 }
 
-.btn--toggle:hover {
-  font-size: 20px;
-}
-
 /* 버튼 컨테이너 오른쪽 정렬 */
 .post-buttons {
   display: flex;
@@ -89,7 +104,6 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-family: 'TTLaundryGothicB';
   font-size: 12px;
   margin: 10px 5px;
   transition: background-color 0.3s ease;
@@ -130,7 +144,6 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-family: 'TTLaundryGothicB';
   font-size: 12px;
   margin: 10px 5px;
   transition: background-color 0.3s ease;
@@ -189,35 +202,6 @@
   background-color: #3e8e41;
 }
 
-/* 대댓글 폼 스타일 수정 */
-.reply-form {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column; /* 세로 배치로 설정 */
-  gap: 10px; /* 입력란과 버튼 간의 간격 */
-}
-
-/* 버튼들을 오른쪽으로 정렬 */
-.reply-buttons {
-  display: flex;
-  justify-content: flex-end; /* 버튼을 오른쪽 끝으로 정렬 */
-  gap: 10px; /* 버튼 간 간격 */
-}
-
-
-/* 대댓글 작성 버튼 */
-.btn--reply {
-  padding: 5px 10px;
-  background-color: lightseagreen;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn--reply:hover {
-  background-color: #3e8e41;
-}
 
 /* 새로운 날짜 및 장소 표시 상자 스타일 */
 .info-box {
