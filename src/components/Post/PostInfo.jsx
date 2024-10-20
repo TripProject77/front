@@ -7,7 +7,6 @@ import * as auth from "../../api/auth";
 import Header from "../Header/Header";
 import "./PostInfo.css";
 
-
 const PostInfo = () => {
   const navigate = useNavigate();
 
@@ -19,11 +18,10 @@ const PostInfo = () => {
 
   const [editingCommentId, setEditingCommentId] = useState(null); // 수정 중인 댓글 ID
   const [editingCommentText, setEditingCommentText] = useState(""); // 수정 중인 댓글 텍스트
-
   const [postImage, setPostImage] = useState(null);
-
   const [showButtons, setShowButtons] = useState(false);
 
+  const [participationCount, setParticipationCount] = useState(0);
 
   console.log(id);
 
@@ -247,6 +245,24 @@ const PostInfo = () => {
     }
   };
 
+  const handleParticipate = async () => {
+    try {
+      const response = await auth.participate(id);
+
+      if (response.status === 200) {
+        setParticipationCount((prevCount) => prevCount + 1);
+
+        alert("참여 성공!");
+        setParticipationCount(participationCount + 1);
+      } else {
+        alert("참여 실패!");
+      }
+    } catch (error) {
+      console.error("Failed to participate:", error);
+      alert("참여 중 에러 발생");
+    }
+  };
+
   useEffect(() => {
     if (id) {
       getPostInfo(id);
@@ -279,7 +295,7 @@ const PostInfo = () => {
         <div className="post-header">
           <div className="title-inventory">
             <h3 className="post-title">{postInfo.title}</h3>
-            
+
             <button
               type="button"
               className="btn--toggle"
@@ -306,7 +322,7 @@ const PostInfo = () => {
         <hr />
 
         {postInfo.postCategory !== "free" && (
-            <h5 style={{marginBottom:"10px"}}>여행 일정</h5>
+          <h5 style={{ marginBottom: "10px" }}>여행 일정</h5>
         )}
 
         {postInfo.postCategory !== "free" && (
@@ -331,10 +347,7 @@ const PostInfo = () => {
         <br />
 
         <div className="post-content">
-
-          {postInfo.postCategory !== "free" && (
-            <h5>여행 소개</h5>
-          )}
+          {postInfo.postCategory !== "free" && <h5>여행 소개</h5>}
 
           <br />
           <p>{postInfo.content}</p>
@@ -344,13 +357,38 @@ const PostInfo = () => {
 
         {postInfo.postCategory !== "free" && (
           <>
-          <div className="travel-itinerary">
-            <h5 style={{marginBottom:"15px"}}>참여중인 동행</h5>
-            <button className="participation-button">동행 참여</button>
-          </div>
-          <div className="participation">
+            <div className="travel-itinerary">
+              <h5 style={{ marginBottom: "15px" }}>
+                참여중인 동행 ({participationCount}명/
+                <span style={{ color: "green" }}>{postInfo.people}명</span>)
+              </h5>
+              <button
+                className="participation-button"
+                onClick={handleParticipate}
+              >
+                동행 참여
+              </button>
+            </div>
 
-          </div>
+            <div className="participation">
+              <ul style={{ display: "flex", listStyle: "none", padding: 0 }}>
+                {postInfo.participation && postInfo.participation.length > 0 ? (
+                  postInfo.participation.map((person, index) => (
+                    <span key={index} className="participant-name">
+                      <li
+                        key={index}
+                        className="participant-name"
+                        style={{ marginRight: "10px" }}
+                      >
+                        {person}님
+                      </li>{" "}
+                    </span>
+                  ))
+                ) : (
+                  <p style={{ color: "gray" }}>아직 참여자가 없습니다.</p>
+                )}
+              </ul>
+            </div>
           </>
         )}
 
@@ -362,35 +400,42 @@ const PostInfo = () => {
                   <li key={index}>#{tag}</li>
                 ))
               ) : (
-                <p style={{fontSize:"12px"}}>해시태그가 없습니다.</p>
+                <p style={{ fontSize: "12px" }}>해시태그가 없습니다.</p>
               )}
             </ul>
           </div>
         )}
 
-<div>
-      {/* --- 버튼, 클릭하면 버튼들이 토글됩니다 */}
-      
+        <div>
+          {/* --- 버튼, 클릭하면 버튼들이 토글됩니다 */}
 
-      {/* 버튼들, 상태에 따라 표시 */}
-      {showButtons && (
-        <div className="post-buttons">
-          <button type="submit" className="btn--post" onClick={handleEditClick}>
-            게시글 수정
-          </button>
-          <button
-            type="button"
-            className="btn--post"
-            onClick={() => deletePost(postInfo.id)}
-          >
-            게시글 삭제
-          </button>
-          <button type="button" className="btn--post" onClick={handlePostClick}>
-            게시글 목록
-          </button>
+          {/* 버튼들, 상태에 따라 표시 */}
+          {showButtons && (
+            <div className="post-buttons">
+              <button
+                type="submit"
+                className="btn--post"
+                onClick={handleEditClick}
+              >
+                게시글 수정
+              </button>
+              <button
+                type="button"
+                className="btn--post"
+                onClick={() => deletePost(postInfo.id)}
+              >
+                게시글 삭제
+              </button>
+              <button
+                type="button"
+                className="btn--post"
+                onClick={handlePostClick}
+              >
+                게시글 목록
+              </button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
 
         <div className="comments-section">
           <form onSubmit={handleCommentSubmit} className="comment-form">
@@ -439,9 +484,7 @@ const PostInfo = () => {
                       {formatDate(commentObj.createdDate)}
                     </p>
 
-                    {/* 댓글 수정, 삭제, 대댓글 버튼 */}
                     <div className="comment-actions">
-                      {/* 수정, 삭제 버튼은 작성자와 관리자가 볼 수 있음 */}
                       {(userInfo?.username === commentObj.author ||
                         userInfo?.username === "admin0515") && (
                         <>
@@ -465,20 +508,6 @@ const PostInfo = () => {
                         </>
                       )}
                     </div>
-                    {commentObj.replies && (
-                      <div className="replies-list">
-                        {commentObj.replies.map((reply) => (
-                          <div key={reply.id} className="reply">
-                            <p>
-                              {reply.author} : {reply.comment}
-                            </p>
-                            <p className="reply-date">
-                              {formatDate(reply.createdDate)}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </>
                 )}
               </div>

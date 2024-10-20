@@ -89,7 +89,7 @@ const WeatherInfo = () => {
         )}
         <div id="weatherInfoText">
           {loading ? (
-            "날씨를 확인하세요 !"
+            "여행지의 날씨를 확인해보세요 !"
           ) : weatherInfo ? (
             <div className="weather-details">
               <div className="weather-detail">

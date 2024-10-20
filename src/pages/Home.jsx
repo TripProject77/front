@@ -1,56 +1,56 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import * as auth from "../api/auth";
+import { Link, useNavigate } from "react-router-dom";
+
 import { CiCalendar } from "react-icons/ci";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { LuSubtitles } from "react-icons/lu";
-import { Link, useNavigate } from "react-router-dom";
-import * as auth from "../api/auth";
+
 import Header from "../components/Header/Header";
 import WeatherInfo from "../components/weather/weather";
 import { LoginContext } from "../contexts/LoginContextProvider";
+
 import "./Home.scss";
+
 
 const Home = () => {
   const navigate = useNavigate();
 
+  // 국내, 해외 여행지 변수
   const [domesticDestinations, setDomesticDestinations] = useState([]);
   const [internationalDestinations, setInternationalDestinations] = useState(
     []
   );
+
+  const [posts, setPosts] = useState([]); // 게시글 목록
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { isLogin, userInfo, logout } = useContext(LoginContext);
-  const [homeProfileImage, setHomeProfileImage] = useState(null);
-
-  console.log(isLogin);
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
-  };
+  const [homeProfileImage, setHomeProfileImage] = useState(null); // 사용자 이미지 변수
+  const [highlightedIndex, setHighlightedIndex] = useState(0); // 강조 순서 상태 변수
 
   const goToPostForm = () => {
     navigate("/post");
   };
 
-  const [posts, setPosts] = useState([]); // 게시글 목록
-
+  // 게시글 목록 api
   const getPosts = async () => {
     try {
-      const response = await axios.get("/post/postList"); // 전체 게시글 불러오기
-      const data = response.data; // 전체 데이터 가져오기
-      setPosts(data.slice(0, 3)); // 최대 3개만 저장
+      const response = await axios.get("/post/postList"); 
+      const data = response.data; 
+
+      const filteredPosts = data
+        .filter((post) => post.postCategory === "together")
+        .slice(0, 3);
+
+      setPosts(filteredPosts);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
     }
   };
 
-  // 국내 여행지 데이터를 가져오는 함수
+  // 국내 여행지 데이터 api
   const fetchDomesticDestinations = () => {
     setLoading(true);
     setError(null);
@@ -69,7 +69,7 @@ const Home = () => {
       });
   };
 
-  // 해외 여행지 데이터를 가져오는 함수
+  // 해외 여행지 데이터 api
   const fetchInternationalDestinations = () => {
     setLoading(true);
     setError(null);
@@ -91,7 +91,7 @@ const Home = () => {
       });
   };
 
-  // 사용자 이미지 불러오기
+  // 사용자 이미지 api
   const fetchHomeProfileImage = async (username) => {
     try {
       const response = await auth.getImage(username);
@@ -103,20 +103,25 @@ const Home = () => {
     }
   };
 
-  // useEffect를 사용해 컴포넌트가 렌더링될 때 데이터를 가져옵니다.
   useEffect(() => {
-    fetchDomesticDestinations(); // 국내 여행지 데이터 가져오기
-    fetchInternationalDestinations(); // 해외 여행지 데이터 가져오기
+    fetchDomesticDestinations();
+    fetchInternationalDestinations();
+    getPosts();
   }, []);
-
+  
+  // userInfo가 변경될 때만 실행
   useEffect(() => {
     if (userInfo?.username) {
       fetchHomeProfileImage(userInfo.username);
     }
   }, [userInfo]);
-
+  
   useEffect(() => {
-    getPosts();
+    const interval = setInterval(() => {
+      setHighlightedIndex((prevIndex) => (prevIndex + 1) % 10); // 10개 항목 순환
+    }, 2000);
+  
+    return () => clearInterval(interval); 
   }, []);
 
   return (
@@ -135,6 +140,7 @@ const Home = () => {
             가보자Go
           </button>
         </div>
+
         <div className="layout-container">
           <div className="home-container">
             <h3>최근 동행 게시글</h3>
@@ -148,6 +154,7 @@ const Home = () => {
                   <div className="post-card" key={post.id}>
                     <Link to={`/postInfo/${post.id}`}>
                       <div className="post-card-content">
+
                         {/* 제목 */}
                         <div className="post-card-title">
                           <LuSubtitles className="icon" /> {post.title}
@@ -166,7 +173,7 @@ const Home = () => {
                         <div className="post-card-details">
                           <div>
                             {new Date(post.createdDate).toLocaleDateString()}{" "}
-                            {post.writer}{" "}
+                            {post.writer}
                           </div>
                         </div>
                       </div>
@@ -195,16 +202,16 @@ const Home = () => {
                   <div className="userInfo">
                     <p className="username">{userInfo.username}</p>
                     <p className="email">{userInfo.email}</p>
-                    <p className="home-participation"><span>동행 모집 </span>  <span></span></p>
+                    <p className="home-participation">
+                      <span>동행 모집 </span> <span></span>
+                    </p>
                   </div>
                 </div>
 
                 <button className="logout-button" onClick={() => logout()}>
                   로그아웃
                 </button>
-            
-            </div>
-            
+              </div>
             ) : (
               <div className="non-login-wrapper">
                 <p className="info-text">
@@ -223,13 +230,15 @@ const Home = () => {
 
         <div className="home-container2">
           <div className="place-container">
-            {/* 국내 여행지 */}
             <div className="top10">
               <h3>국내 인기 여행지 TOP 10</h3>
               <hr />
               <ul>
                 {domesticDestinations.map((destination, index) => (
-                  <li key={index}>
+                  <li
+                    key={index}
+                    className={index === highlightedIndex ? "highlighted" : ""} // 강조 항목에만 클래스 추가
+                  >
                     <p>
                       <HiOutlineLocationMarker /> {destination.searchWord} -{" "}
                       {destination.areaOrCountryName}
@@ -239,13 +248,15 @@ const Home = () => {
               </ul>
             </div>
 
-            {/* 해외 여행지 */}
             <div className="top10">
               <h3>해외 인기 여행지 TOP 10</h3>
               <hr />
               <ul>
                 {internationalDestinations.map((destination, index) => (
-                  <li key={index}>
+                  <li
+                    key={index}
+                    className={index === highlightedIndex ? "highlighted" : ""} 
+                  >
                     <p>
                       <HiOutlineLocationMarker /> {destination.searchWord} -{" "}
                       {destination.areaOrCountryName}
