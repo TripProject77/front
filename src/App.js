@@ -4,11 +4,12 @@ import "./App.css";
 
 import PostForm from "./Board/Form/PostForm";
 import { PostSaveProvider } from "./Board/Form/PostSaveProvider";
-import FreePostForm from "./Board/Form/freePostForm";
+import FreePostForm from "./Board/Form/FreePostForm";
 import KakaoMap from "./components/Map/KakaoMap";
 import PostInfo from "./components/Post/PostInfo";
 import PostComInfo from "./components/PostCom/PostComInfo";
-import PostUpdateForm from "./components/Role/PostUpdateForm";
+import FreePostUpdateForm from "./Board/Form/FreePostUpdateForm";
+import PostUpdateForm from "./Board/Form/PostUpdateForm";
 import LoginContextProvider from "./contexts/LoginContextProvider";
 import Admin from "./pages/Admin";
 import Home from "./pages/Home";
@@ -30,7 +31,8 @@ const App = () => {
           <Route path="/user" element={<User />} />
           <Route path="/post" element={<Post />} />
           <Route path="/postInfo/:id" element={<PostInfo />} />
-          <Route path="/postUpdateForm" element={<PostUpdateForm />} />
+          <Route path="/FreePostUpdateForm" element={<FreePostUpdateForm />} />
+          <Route path="/PostUpdateForm" element={<PostUpdateForm />} />
           <Route path="/postCom" element={<PostCom />} />
           <Route path="/postInfo/:postId" element={<PostComInfo />} />
           <Route path="/kakao/search" element={<KakaoMap />} />

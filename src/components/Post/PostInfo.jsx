@@ -5,6 +5,7 @@ import { GoTriangleRight } from "react-icons/go";
 import { useNavigate, useParams } from "react-router-dom";
 import * as auth from "../../api/auth";
 import Header from "../Header/Header";
+import Modal from "./Modal"; // 모달 컴포넌트 import
 import "./PostInfo.css";
 
 const PostInfo = () => {
@@ -23,7 +24,15 @@ const PostInfo = () => {
 
   const [participationCount, setParticipationCount] = useState(0);
 
-  console.log(id);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+
+  const openModal = () => {
+    setIsModalOpen(true); // 모달 열기
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+  };
 
   const toggleButtons = () => {
     setShowButtons(!showButtons);
@@ -143,10 +152,24 @@ const PostInfo = () => {
     }
   };
 
-  // 게시글 수정
+  // 자유 게시글 수정
+  const handleFreeEditClick = () => {
+    if (userInfo?.username === "admin0515") {
+      navigate(`/FreePostUpdateForm`, { state: { postId: postInfo.id } });
+    } else {
+      if (userInfo?.name !== postInfo?.writer) {
+        alert("수정 권한이 없습니다.");
+        navigate(`/postInfo/${id}`);
+      } else {
+        navigate(`/postUpdateForm`, { state: { postId: postInfo.id } });
+      }
+    }
+  };
+
+  // 동행 게시글 수정
   const handleEditClick = () => {
     if (userInfo?.username === "admin0515") {
-      navigate(`/postUpdateForm`, { state: { postId: postInfo.id } });
+      navigate(`/PostUpdateForm`, { state: { postId: postInfo.id } });
     } else {
       if (userInfo?.name !== postInfo?.writer) {
         alert("수정 권한이 없습니다.");
@@ -246,20 +269,37 @@ const PostInfo = () => {
   };
 
   const handleParticipate = async () => {
+    if (postInfo.writer === userInfo?.name) {
+      alert("작성자는 참여할 수 없습니다.");
+      return;
+    }
+
     try {
       const response = await auth.participate(id);
 
       if (response.status === 200) {
-        setParticipationCount((prevCount) => prevCount + 1);
-
         alert("참여 성공!");
-        setParticipationCount(participationCount + 1);
       } else {
         alert("참여 실패!");
       }
     } catch (error) {
       console.error("Failed to participate:", error);
       alert("참여 중 에러 발생");
+    }
+  };
+
+  const handleParticipateCancel = async () => {
+    try {
+      const response = await auth.participateCancel(id);
+
+      if (response.status === 200) {
+        alert("동행 참여 취소 성공!");
+      } else {
+        alert("참여 참여 취소 실패!");
+      }
+    } catch (error) {
+      console.error("Failed to cancel participate:", error);
+      alert("참여 취소 중 에러 발생");
     }
   };
 
@@ -272,6 +312,12 @@ const PostInfo = () => {
 
     getUserInfo();
   }, [id]);
+
+  useEffect(() => {
+    if (postInfo && postInfo.participation) {
+      setParticipationCount(postInfo.participation.length);
+    }
+  }, [postInfo]);
 
   // postInfo 값이 불러오기 전까지 Loding으로 표시되게
   if (!postInfo || !commentsList) {
@@ -291,6 +337,12 @@ const PostInfo = () => {
     <>
       <Header />
 
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <h5>작성자 프로필</h5>
+          <p>이름: {postInfo?.writer}</p>
+          <p>이메일: {userInfo?.email}</p>
+      </Modal>
+
       <div className="postInfo_container">
         <div className="post-header">
           <div className="title-inventory">
@@ -308,7 +360,10 @@ const PostInfo = () => {
           <div className="post-meta">
             <span className="post-author">
               작성자: {postInfo.writer} <GoTriangleRight />{" "}
-              <span className="profileInfo">프로필 확인</span>
+              <span className="profileInfo" onClick={openModal}>
+                프로필 확인
+              </span>{" "}
+              {/* 프로필 확인 클릭 시 모달 오픈 */}
             </span>
             <span className="post-count">조회수: {postInfo.count}</span>
           </div>
@@ -320,6 +375,8 @@ const PostInfo = () => {
         </div>
 
         <hr />
+
+        
 
         {postInfo.postCategory !== "free" && (
           <h5 style={{ marginBottom: "10px" }}>여행 일정</h5>
@@ -338,7 +395,7 @@ const PostInfo = () => {
 
         <div className="Image">
           {postImage ? (
-            <img src={postImage} alt="postImage" className="postImage" />
+            <img src={postImage} alt="postImage" className="postInfoImage" />
           ) : (
             <p>이미지를 불러올 수 없습니다.</p>
           )}
@@ -362,12 +419,24 @@ const PostInfo = () => {
                 참여중인 동행 ({participationCount}명/
                 <span style={{ color: "green" }}>{postInfo.people}명</span>)
               </h5>
-              <button
-                className="participation-button"
-                onClick={handleParticipate}
-              >
-                동행 참여
-              </button>
+              <div>
+                <button
+                  className="participation-button"
+                  onClick={handleParticipate}
+                >
+                  {" "}
+                  동행 참여
+                </button>
+
+                {postInfo.participation.includes(userInfo?.username) && (
+                  <button
+                    className="participation-button"
+                    onClick={handleParticipateCancel}
+                  >
+                    동행 참여 취소
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="participation">
@@ -406,36 +475,65 @@ const PostInfo = () => {
           </div>
         )}
 
-        <div>
-          {/* --- 버튼, 클릭하면 버튼들이 토글됩니다 */}
+        {postInfo.postCategory == "free" && (
+          <div>
+            {showButtons && (
+              <div className="post-buttons">
+                <button
+                  type="submit"
+                  className="btn--post"
+                  onClick={handleFreeEditClick}
+                >
+                  게시글 수정
+                </button>
+                <button
+                  type="button"
+                  className="btn--post"
+                  onClick={() => deletePost(postInfo.id)}
+                >
+                  게시글 삭제
+                </button>
+                <button
+                  type="button"
+                  className="btn--post"
+                  onClick={handlePostClick}
+                >
+                  게시글 목록
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
-          {/* 버튼들, 상태에 따라 표시 */}
-          {showButtons && (
-            <div className="post-buttons">
-              <button
-                type="submit"
-                className="btn--post"
-                onClick={handleEditClick}
-              >
-                게시글 수정
-              </button>
-              <button
-                type="button"
-                className="btn--post"
-                onClick={() => deletePost(postInfo.id)}
-              >
-                게시글 삭제
-              </button>
-              <button
-                type="button"
-                className="btn--post"
-                onClick={handlePostClick}
-              >
-                게시글 목록
-              </button>
-            </div>
-          )}
-        </div>
+        {postInfo.postCategory !== "free" && (
+          <div>
+            {showButtons && (
+              <div className="post-buttons">
+                <button
+                  type="submit"
+                  className="btn--post"
+                  onClick={handleEditClick}
+                >
+                  게시글 수정
+                </button>
+                <button
+                  type="button"
+                  className="btn--post"
+                  onClick={() => deletePost(postInfo.id)}
+                >
+                  게시글 삭제
+                </button>
+                <button
+                  type="button"
+                  className="btn--post"
+                  onClick={handlePostClick}
+                >
+                  게시글 목록
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="comments-section">
           <form onSubmit={handleCommentSubmit} className="comment-form">
