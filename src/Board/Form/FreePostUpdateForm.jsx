@@ -4,14 +4,44 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import * as auth from "../../api/auth";
 
-const PostUpdateForm = () => {
+const FreePostUpdateForm = () => {
   const location = useLocation();
   const { postId } = location.state;
-  console.log(postId);
 
   const [postInfo, setPostInfo] = useState();
-
   const navigate = useNavigate();
+
+  // 이미지 저장
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(
+    postInfo?.postImageurl || "choose a update image"
+  );
+
+  const onUpdatePost = (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const title = form.title.value;
+    const content = form.content.value;
+
+    const formData = new FormData();
+
+    const postUpdateData = {
+      title,
+      content,
+    };
+
+    if (file) {
+      formData.append("file", file);
+    }
+
+    formData.append(
+      "postUpdateData",
+      new Blob([JSON.stringify(postUpdateData)], { type: "application/json" })
+    );
+
+    updateFreePost(formData);
+  };
 
   const getPostInfo = async (postId) => {
     try {
@@ -24,32 +54,29 @@ const PostUpdateForm = () => {
     }
   };
 
-  const updatePost = async (form) => {
+  const updateFreePost = async (formData) => {
     try {
-      const response = await auth.updatePost({ ...form, id: postInfo.id });
-
+      const response = await auth.updateFreePost(postId, formData);
+      
       if (response.status === 200) {
         alert("게시글 수정 성공 !!");
         navigate(`/postInfo/${postId}`);
       } else {
         alert("게시글 수정 실패 !!");
-        navigate(`/postInfo/${postId}`);
       }
     } catch (error) {
       console.error("Failed to update post info:", error);
       alert("게시글 수정 중 에러 발생");
-      navigate(`/postInfo/${postId}`);
     }
   };
 
-  const onUpdatePost = (e) => {
-    e.preventDefault();
-    const form = e.target;
+  const onFileChange = (e) => {
+    const selectedFile = e.target.files[0];
 
-    const title = form.title.value;
-    const content = form.content.value;
-
-    updatePost({ title, content });
+    if (selectedFile) {
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+    }
   };
 
   useEffect(() => {
@@ -65,8 +92,8 @@ const PostUpdateForm = () => {
   return (
     <div>
       <Header />
-      <div className="board-insert-form">
-        <h1>게시글 수정</h1>
+      <div className="free-update-form">
+        <h2>게시글 수정</h2>
         <hr />
         <form onSubmit={(e) => onUpdatePost(e)}>
           <table>
@@ -109,6 +136,25 @@ const PostUpdateForm = () => {
                   />
                 </td>
               </tr>
+
+              <tr>
+                <td>게시글 이미지</td>
+                <td>
+                  <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept="image/*"
+                    onChange={onFileChange}
+                    defaultValue={postInfo?.postImageurl}
+                    style={{ display: "none" }}
+                  />
+
+                  <label htmlFor="file" className="image-btn">
+                    {fileName}
+                  </label>
+                </td>
+              </tr>
             </tbody>
           </table>
 
@@ -121,4 +167,4 @@ const PostUpdateForm = () => {
   );
 };
 
-export default PostUpdateForm;
+export default FreePostUpdateForm;

@@ -98,6 +98,7 @@ const Home = () => {
       const data = response.data;
       console.log("Fetched image URL:", data.url);
       setHomeProfileImage(data.url);
+      
     } catch (error) {
       console.error("Error fetching profile image:", error);
     }

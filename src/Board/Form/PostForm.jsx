@@ -58,6 +58,7 @@ const PostForm = () => {
       "postData",
       new Blob([JSON.stringify(postData)], { type: "application/json" })
     );
+    
     formData.append("postCategory", postCategory);
 
     // 선택된 이미지 파일 추가
@@ -120,7 +121,7 @@ const PostForm = () => {
     <div>
       <Header />
       <div className="post-insert-form">
-        <h1>동행 게시글 작성</h1>
+        <h2>동행 게시글 작성</h2>
         <hr />
         <form onSubmit={onPost}>
           <table>
@@ -225,7 +226,7 @@ const PostForm = () => {
 
                   <label
                     htmlFor="file"
-                    className="file-input-label btn btn--form"
+                    className="image-btn"
                   >
                     {fileName}
                   </label>

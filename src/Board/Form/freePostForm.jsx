@@ -72,9 +72,9 @@ const PostForm = () => {
     <div>
       <Header />
       <div className="post-insert-form">
-        <h1>자유 게시글 작성</h1>
+        <h2>자유 게시글 작성</h2>
         <hr />
-        <form onSubmit={onPost}>
+        <form onSubmit={onPost} className="free-insert-form">
           <table>
             <tbody>
               <tr>
@@ -134,7 +134,7 @@ const PostForm = () => {
 
                   <label
                     htmlFor="file"
-                    className="file-input-label btn btn--form"
+                    className="image-btn"
                   >
                     {fileName}
                   </label>

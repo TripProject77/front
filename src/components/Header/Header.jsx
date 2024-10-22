@@ -42,7 +42,10 @@ const Header = () => {
             </>
           ) : (
             <>
+              <li><h5>{userInfo?.name}님 환영합니다</h5></li>
+
               <li className="dropdown">
+
                 <button className="dropbtn" onClick={toggleDropdown}>
                   게시판
                 </button>

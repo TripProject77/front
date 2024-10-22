@@ -27,8 +27,11 @@ export const list = () => api.get("/user/userList");
 // 게시물 저장
 export const postSave = (data) => api.post(`post/write`, data);
 
-// 게시물 수정
-export const updatePost = (data) => api.post(`/post/update`, data) // json 형식
+// 자유 게시물 수정
+export const updateFreePost = (postId, data) => api.post(`/post/free/update/${postId}`, data) // json 형식
+
+// 동행 게시글 수정
+export const updatePost = (postId, data) => api.post(`/post/update/${postId}`, data) // json 형식
 
 // 게시물 삭제
 export const removePost = (id) => api.delete(`/post/delete/${id}`)
@@ -54,16 +57,14 @@ export const removeComment = (id) => api.delete(`/comment/delete/${id}`)
 // 댓글 리스트
 export const CommentList = (id) => api.get(`/comment/commentList/${id}`);
 
-export const addReplyComment = (id, replyingToCommentId, data) => api.post(`/comment/${id}/reply/${replyingToCommentId}`, data); 
-
-
 export const uploadImage = () => api.get(`/file/upload`)
 
 export const getImage = (username) => api.get(`/file/${username}/image`);
 
 export const getPostImage = (postId) => api.get(`/file/${postId}/postImage`);
 
-
 export const uploadProfileImage = (username, data) => api.post(`/file/uploadProfileImage/${username}`, data);
 
 export const participate = (postId) => api.post(`/post/${postId}/participate`)
+
+export const participateCancel = (id) => api.delete(`/post/delete/participate/${id}`)
