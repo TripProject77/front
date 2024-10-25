@@ -1,132 +1,167 @@
 .userInfoContainer {
-    display: flex; /* 플렉스 컨테이너 설정 */
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 11px;
-    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.1);
-}
-
-.userProfile {
-    flex-basis: 30%; /* 전체 컨테이너의 30%를 차지하도록 설정 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background-color: lightgray;
-    border-radius: 11px;
-    margin-right: 20px; /* 오른쪽 여백 추가 */
-}
-
-.profileImage {
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 20px; /* 이미지 아래 여백 */
+  width: 60%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 11px;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.1);
 }
 
 .userInfoForm {
-    flex-basis: 70%; /* 전체 컨테이너의 70%를 차지하도록 설정 */
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    border-radius: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.userInfo-title {
-    padding: 15px;
-    font-size: 22px;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 10px;
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* 사용자 정보 폼 레이아웃 */
-.userInfo-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    align-items: center; /* 입력 폼 및 버튼을 가운데 정렬 */
+.Profile {
+  margin-bottom: 20px;
 }
 
-/* 각 입력 필드 및 레이블 정렬 */
-.userInfo-form div {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.HomeProfileImage {
+  width: 100px; /* 적절한 이미지 크기로 조정 */
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.userInfo-form label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    text-align: center;
+.username,
+.email {
+  font-size: 18px;
+  margin: 5px 0;
 }
 
-.userInfo-form input {
-    width: 500px;
-    max-width: 100%;
-    padding: 1rem;
-    border-radius: 9px;
-    border: 1px solid lightgray;
-    text-align: center;
+.my_self_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 11px;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.02);
 }
 
-.userInfoBtn--form {
-    background-color: lightseagreen;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    margin-top: 20px;
-    width: 500px;
-    max-width: 100%;
-    align-self: center;
+.my_self {
+  text-align: left;
+  flex-grow: 1;
+  font-size: 16px;
+  color: gray;
 }
 
-.userInfoBtn--form:hover {
-    background-color: red;
-    color: white;
-}
-
-/* 파일 업로드 및 버튼 스타일 */
-.uploadLabel, .uploadButton {
-    margin-top: 30px;
-    background-color: lightseagreen;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size : 16px;
-}
-
-.uploadLabel:hover, .uploadButton:hover {
-    background-color: white;
-    color: lightseagreen;
-}
-
-.uploadInput {
-    display: none;
-}
-
-.userInfoBtn--form {
+.btn_my_self {
+  color: rgb(0, 206, 124);
+  border: 1px solid rgb(0, 206, 124);
+  background-color: white;
   padding: 10px 20px;
-  background-color: #lightseagreen;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.update_user_btn {
+  display: flex;
+  background-color: white;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 34px;
+  font-size: 14px;
+  color: rgb(0, 206, 124);
+  border: 1px solid rgb(0, 206, 124);
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 10px 0;
+  margin: 5px 0;
+  border: none;
+  background-color: lightgray;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.tab-button.active {
+  background-color: lightseagreen;
   color: white;
+}
+
+.tab-content {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.userInfo-post,
+.user-parti {
+  text-align: center;
+}
+
+.user-post-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: lightseagreen;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'Malgun Gothic', sans-serif;
-  font-size: 16px;
-  vertical-align: middle; /* 버튼도 가운데 정렬 */
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 20px;
 }
 
-.userInfoBtn--form:hover {
-    background-color: rgb(41, 206, 198);
-    color: white;
-}
+.postCards {
+    display: inline-block;
+    width: 100%;
+  }
+  
+  .postCard {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 20px;
+  }
+  
+  .postCard:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .postCard h3 {
+    font-size: 1.2em;
+    margin: 0 0 10px;
+  }
+  
+  .postCard p {
+    color: #555;
+    font-size: 0.9em;
+    margin: 5px 0;
+  }
+  

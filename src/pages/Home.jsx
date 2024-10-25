@@ -98,7 +98,7 @@ const Home = () => {
       const data = response.data;
       console.log("Fetched image URL:", data.url);
       setHomeProfileImage(data.url);
-      
+
     } catch (error) {
       console.error("Error fetching profile image:", error);
     }
@@ -203,8 +203,8 @@ const Home = () => {
                   <div className="userInfo">
                     <p className="username">{userInfo.username}</p>
                     <p className="email">{userInfo.email}</p>
-                    <p className="home-participation">
-                      <span>동행 모집 </span> <span></span>
+                    <p className="home-participation"> 
+                      <span>내 동행</span> 
                     </p>
                   </div>
                 </div>

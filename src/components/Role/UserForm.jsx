@@ -1,159 +1,189 @@
 import React, { useEffect, useState } from "react";
 import * as auth from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 import "./UserForm.css";
+import { LuPencilLine } from "react-icons/lu";
+import { BsPencilSquare } from "react-icons/bs";
+import { CiCalendar } from "react-icons/ci";
+import { LuSubtitles } from "react-icons/lu";
+import { TbPencilCheck } from "react-icons/tb";
+export const UserForm = ({ userInfo, updateUser }) => {
+  const navigate = useNavigate();
 
-export const UserForm = ({ userInfo, updateUser, deleteUser }) => {
   const [profileImage, setProfileImage] = useState(null);
+  const [activeTab, setActiveTab] = useState("post");
+  const [postList, setPostList] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
-  // 사용자 정보 업데이트 핸들러
-  const onUpdate = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const username = form.username.value;
-    const name = form.name.value;
-    const email = form.email.value;
+  // Fetch posts and filter by user name
+  const getPostList = async () => {
+    try {
+      const response = await auth.postList();
+      const data = response.data;
 
-    updateUser({ username, name, email });
+      const filtered = data.filter(
+        (post) =>
+          post.postCategory === "together" && post.writer === userInfo?.name
+      );
+
+      setPostList(filtered);
+      setFilteredPosts(filtered);
+    } catch (error) {
+      console.error("Failed to fetch post list:", error);
+    }
+  };
+
+  const handlePostWriteClick = () => {
+    navigate(`/post-write`);
+  };
+
+  const handlePostClick = (postId) => {
+    navigate(`/postInfo/${postId}`);
   };
 
   useEffect(() => {
     if (userInfo?.username) {
       fetchProfileImage(userInfo.username);
+      getPostList();
     }
   }, [userInfo]);
 
-  // 날짜 형식 변환 함수
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  // 사용자 이미지 불러오기
   const fetchProfileImage = async (username) => {
     try {
       const response = await auth.getImage(username);
-      const data = response.data;
-      console.log("Fetched image URL:", data.url);
-      setProfileImage(data.url);
+      setProfileImage(response.data.url);
     } catch (error) {
       console.error("Error fetching profile image:", error);
     }
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0]; // 선택한 파일 가져오기
-
-    if (file) {
-      try {
-        const formData = new FormData(); // FormData 객체 생성
-        formData.append("file", file); // FormData에 파일 추가
-
-        const response = await auth.uploadProfileImage(
-          userInfo.username,
-          formData
-        );
-
-        setProfileImage(`${response.data.url}?t=${new Date().getTime()}`); // URL에 쿼리 파라미터 추가
-
-        console.log("Profile image updated:", response.data.url);
-      } catch (error) {
-        console.error("Failed to upload profile image:", error);
-      }
-    }
-  };
-
   return (
     <div className="userInfoContainer">
-      {/* 왼쪽 이미지 영역 */}
-      <div className="userProfile">
-        {profileImage ? (
-          <img src={profileImage} alt="Profile" className="profileImage" />
-        ) : (
-          <p>프로필 이미지를 불러올 수 없습니다.</p>
-        )}
-        {/* 이미지 업로드 버튼 */}
-        <label htmlFor="uploadInput" className="uploadLabel">
-          프로필 이미지 변경
-        </label>
-        <input
-          type="file"
-          id="uploadInput"
-          className="uploadInput"
-          onChange={handleFileChange} // 파일 변경 핸들러 추가
-        />
+      <div
+        style={{ alignItems: "center", textAlign: "center", padding: "20px" }}
+      >
+        [ {userInfo?.name} ]님의 정보
       </div>
 
-      {/* 오른쪽 사용자 정보 영역 */}
       <div className="userInfoForm">
-        <h2 className="userInfo-title">[ {userInfo?.name} ] 님의 정보</h2>
-
-        <form className="userInfo-form" onSubmit={onUpdate}>
-          <div>
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              placeholder="username"
-              name="username"
-              autoComplete="username"
-              required
-              readOnly
-              defaultValue={userInfo?.username}
-            />
+        <div className="login-wrapper">
+          <div className="info">
+            <div className="Profile">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="HomeProfileImage"
+                />
+              ) : (
+                <p>프로필 이미지를 불러올 수 없습니다.</p>
+              )}
+            </div>
+            <div className="userInfo">
+              <p className="username">{userInfo?.username}</p>
+              <p className="email">{userInfo?.email}</p>
+              <div className="userInfo-info" style={{ display: "flex" }}>
+                <p className="age">
+                  {userInfo?.age} · {userInfo?.gender}
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <div>
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              placeholder="name"
-              name="name"
-              autoComplete="name"
-              required
-              defaultValue={userInfo?.name}
-            />
+        <div className="my_self_wrapper">
+          <div className="my_self">
+            {userInfo?.selfIntro ? (
+              <p>{userInfo?.selfIntro}</p>
+            ) : (
+              <p>자기소개를 입력해보세요 !</p>
+            )}
           </div>
+          <button
+            className="btn_my_self"
+            onClick={() => navigate(`/UserUpdate`)}
+          >
+            자기소개 작성
+          </button>
+        </div>
 
-          <div>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              placeholder="email"
-              name="email"
-              autoComplete="email"
-              required
-              defaultValue={userInfo?.email}
-            />
-          </div>
+        <button
+          className="update_user_btn"
+          onClick={() => navigate(`/UserUpdate`)}
+        >
+          <LuPencilLine /> 프로필 수정
+        </button>
 
-          <div>
-            <label htmlFor="role">
-              등급 : {userInfo?.role === "ROLE_USER" ? "일반 사용자" : "관리자"}
-            </label>
-          </div>
-
-          <div>
-            <label htmlFor="createdDate">
-              가입 날짜 : {formatDate(userInfo?.createdDate)}
-            </label>
-          </div>
-
-          <button type="submit" className="userInfoBtn--form">
-            정보 수정
+        <div className="tabs">
+          <button
+            className={`tab-button ${activeTab === "post" ? "active" : ""}`}
+            onClick={() => setActiveTab("post")}
+          >
+            포스트
           </button>
           <button
-            type="button"
-            className="userInfoBtn--form"
-            onClick={() => deleteUser(userInfo.username)}
+            className={`tab-button ${
+              activeTab === "participation" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("participation")}
           >
-            회원 탈퇴
+            참여한 동행
           </button>
-        </form>
+        </div>
+
+        <div className="tab-content">
+          {activeTab === "post" && (
+            <div className="userInfo-post">
+              {filteredPosts.length > 0 ? (
+                <div className="postCards">
+                  {filteredPosts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="postCard"
+                      onClick={() => handlePostClick(post.id)}
+                    >
+                      <p>
+                        {" "}
+                        <LuSubtitles className="icon" /> {post.title}
+                      </p>
+                      <p style={{ fontSize: "12px", color: "gray" }}>
+                        <CiCalendar className="icon" /> {post.startDate} ~{" "}
+                        {post.endDate}
+                      </p>
+                      <p style={{ fontSize: "12px", color: "gray" }}>
+                        {" "}
+                        {new Date(post.createdDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <p>아직 작성한 동행글이 없습니다.</p>
+                  <span>동행 글을 작성해보세요 !</span>
+                  <button
+                    className="user-post-btn"
+                    onClick={handlePostWriteClick}
+                  >
+                    동행글 작성
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+          {activeTab === "participation" && (
+            <div className="user-parti">
+              <p>아직 참여한 동행이 없습니다.</p>
+              <span>동행에 참여해보세요 !</span>
+              <button
+                className="user-post-btn"
+                onClick={() => navigate(`/post`)}
+              >
+                동행 참여하기
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

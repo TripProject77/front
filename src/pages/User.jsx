@@ -4,7 +4,6 @@ import Header from "../components/Header/Header";
 import { UserForm } from "../components/Role/UserForm";
 import * as auth from "../api/auth";
 import { useNavigate } from "react-router-dom";
-import { FaRegUser } from "react-icons/fa6";
 
 const User = () => {
   const [userInfo, setUserInfo] = useState();
@@ -77,10 +76,6 @@ const User = () => {
     <>
       <Header />
       <div className="container">
-        <h1 style={{ marginBottom: "70px" }}>
-          <FaRegUser style={{ verticalAlign: "middle", marginRight: "10px" }} />
-          User Information
-        </h1>
 
         <UserForm
           userInfo={userInfo}
