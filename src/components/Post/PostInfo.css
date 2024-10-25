@@ -70,6 +70,10 @@
   margin-bottom: 15px;
 }
 
+.participation-button:hover {
+  transform: scale(1.03);
+}
+
 /* 게시글 내용 */
 .post-content p {
   font-size: 15px;
@@ -114,8 +118,7 @@
 }
 
 .btn--post:hover {
-  background-color: white;
-  color: lightseagreen;
+  transform: scale(1.03);
 }
 
 
@@ -154,8 +157,7 @@
 }
 
 .btn--comment-submit:hover {
-  background-color: white;
-  color: lightseagreen;
+  transform: scale(1.03);
 }
 
 

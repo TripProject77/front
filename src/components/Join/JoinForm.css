@@ -1,93 +1,92 @@
-
-.form {
-    width: 400px;
-    margin: 100px auto;
-    padding: 36px 48px;
-    background-color: white; /* Changed to white for better contrast */
-    border-radius: 11px;
-    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.1); /* Subtle shadow */
+.join_container {
+  width: 500px;
+  margin: 100px auto;
+  padding: 36px 48px;
+  background-color: white;
+  border-radius: 11px;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.1);
 }
 
 .join-title {
-    padding: 15px;
-    font-size: 24px; /* Increased size for better visibility */
-    font-weight: 700; /* Bolder font weight */
-    text-align: center;
-    color: #3a9f97; /* Green color for the title */
+  padding: 15px;
+  font-size: 24px; /* Increased size for better visibility */
+  font-weight: 700; /* Bolder font weight */
+  text-align: center;
+  color: #3a9f97; /* Green color for the title */
 }
 
 .join-form {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 16px;
 }
 
 .join-form label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600; /* Bolder for better readability */
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 15px;
 }
 
 .join-form input {
-    width: 100%;
-    padding: 1.2rem;
-    border-radius: 9px;
-    border: 1px solid #ccc; /* Border for better input visibility */
-    transition: border-color 0.3s; /* Transition for border color change */
+  width: 100%;
+  padding: 1.2rem;
+  border-radius: 9px;
+  border: 1px solid #ccc; /* Border for better input visibility */
+  transition: border-color 0.3s; /* Transition for border color change */
 }
 
 .join-form input:focus {
-    outline: none;
-    border-color: #3a9f97; /* Green border on focus */
-    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2); /* Green shadow on focus */
+  outline: none;
+  border-color: #3a9f97; /* Green border on focus */
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2); /* Green shadow on focus */
 }
 
 .btn--form {
-    background-color:#3a9f97; /* Green button */
-    color: white;
-    align-self: end;
-    padding: 12px; /* Increased padding for a better look */
-    font-size: 18px; /* Adjusted font size */
+  background-color: #3a9f97;
+  color: white;
+  align-self: end;
+  padding: 12px;
+  font-size: 18px;
 }
 
-.btn,
-.btn:link,
-.btn:visited {
-    display: inline-block;
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: 600;
-    border-radius: 9px;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.3s;
+.btn-join {
+  display: inline-block;
+  font-size: 15px;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.3s;
+  background-color: #3a9f97;
+  color: white;
+  padding: 10px;
+  text-align: center;
 }
 
 .btn-join:hover {
-    outline: 1px solid #85C1AE; /* Lighter green outline on hover */
+  transform: scale(1.03);
 }
 
 .btn--form:hover {
-    background-color: #3a9f97; /* Darker green on hover */
-    color: white;
+  background-color: #3a9f97;
+  color: white;
 }
 
-
 .file-input-label {
-    display: inline-block;
-    background-color: white;
-    color: black;
-    padding: 8px;
-    border-radius: 9px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    text-align: center;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 15px;
+  display: inline-block;
+  background-color: white;
+  color: black;
+  padding: 8px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 15px;
 }
 
 .file-input-label:hover {
-    background-color: red;
+  background-color: red;
 }
