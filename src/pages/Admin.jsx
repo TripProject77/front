@@ -58,7 +58,7 @@ export const Admin = () => {
                       <td align="center">{user.name}</td>
                       <td align="center">{user.email}</td>
                       <td align="center">
-                        <button onClick={() => deleteUser(user.username)}>
+                        <button onClick={() => deleteUser(user.username)} className="btn-admin">
                           Delete
                         </button>
                       </td>

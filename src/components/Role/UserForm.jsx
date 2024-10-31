@@ -7,15 +7,20 @@ import { BsPencilSquare } from "react-icons/bs";
 import { CiCalendar } from "react-icons/ci";
 import { LuSubtitles } from "react-icons/lu";
 import { TbPencilCheck } from "react-icons/tb";
+
 export const UserForm = ({ userInfo, updateUser }) => {
   const navigate = useNavigate();
 
   const [profileImage, setProfileImage] = useState(null);
   const [activeTab, setActiveTab] = useState("post");
   const [postList, setPostList] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [postPartiList, setPostPartiList] = useState([]);
 
-  // Fetch posts and filter by user name
+  const [filteredPosts, setFilteredPosts] = useState([]); // 내가 작성한 post
+  const [filteredPartiPosts, setFilteredPartiPosts] = useState([]); //
+
+  console.log(filteredPartiPosts);
+
   const getPostList = async () => {
     try {
       const response = await auth.postList();
@@ -33,6 +38,32 @@ export const UserForm = ({ userInfo, updateUser }) => {
     }
   };
 
+  const getPostPartiList = async () => {
+    try {
+      const response = await auth.postList();
+      const data = response.data;
+  
+      data.forEach((post, index) => {
+        console.log(`Post ${index + 1} participation:`, post.participation);
+      });
+  
+      const filteredParti = data.filter(
+        (post) =>
+          post.postCategory === "together" &&
+          Array.isArray(post.participation) && 
+          post.participation.includes(userInfo?.name)
+      );
+  
+      console.log("Filtered participation posts:", filteredParti);
+  
+      setPostPartiList(filteredParti);
+      setFilteredPartiPosts(filteredParti);
+    } catch (error) {
+      console.error("Failed to fetch post list:", error);
+    }
+  };
+  
+
   const handlePostWriteClick = () => {
     navigate(`/post-write`);
   };
@@ -45,6 +76,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
     if (userInfo?.username) {
       fetchProfileImage(userInfo.username);
       getPostList();
+      getPostPartiList();
     }
   }, [userInfo]);
 
@@ -59,12 +91,6 @@ export const UserForm = ({ userInfo, updateUser }) => {
 
   return (
     <div className="userInfoContainer">
-      <div
-        style={{ alignItems: "center", textAlign: "center", padding: "20px" }}
-      >
-        [ {userInfo?.name} ]님의 정보
-      </div>
-
       <div className="userInfoForm">
         <div className="login-wrapper">
           <div className="info">
@@ -160,7 +186,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
               ) : (
                 <>
                   <p>아직 작성한 동행글이 없습니다.</p>
-                  <span>동행 글을 작성해보세요 !</span>
+                  <p>동행 글을 작성해보세요 !</p>
                   <button
                     className="user-post-btn"
                     onClick={handlePostWriteClick}
@@ -172,15 +198,39 @@ export const UserForm = ({ userInfo, updateUser }) => {
             </div>
           )}
           {activeTab === "participation" && (
-            <div className="user-parti">
-              <p>아직 참여한 동행이 없습니다.</p>
-              <span>동행에 참여해보세요 !</span>
-              <button
-                className="user-post-btn"
-                onClick={() => navigate(`/post`)}
-              >
-                동행 참여하기
-              </button>
+            <div className="userInfo-post">
+              {filteredPartiPosts.length > 0 ? (
+                <div className="postCards">
+                  {filteredPartiPosts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="postCard"
+                      onClick={() => handlePostClick(post.id)}
+                    >
+                      <p>
+                        {" "}
+                        <LuSubtitles className="icon" /> {post.title}
+                      </p>
+                      <p style={{ fontSize: "12px", color: "gray" }}>
+                        <CiCalendar className="icon" /> {post.startDate} ~{" "}
+                        {post.endDate}
+                      </p>
+                      <p style={{ fontSize: "12px", color: "gray" }}>
+                        {" "}
+                        {new Date(post.createdDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <p>아직 참여한 동행이 없습니다.</p>
+                  <p>동행에 참여해보세요 !</p>
+                  <button className="user-post-btn" onClick={handlePostClick}>
+                    동행 참여
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>

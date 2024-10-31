@@ -187,7 +187,7 @@ const Home = () => {
 
           <div className="home-login-form">
             {isLogin ? (
-              <div className="login-wrapper">
+              <div className="home-login-wrapper">
                 <div className="info">
                   <div className="Profile">
                     {homeProfileImage ? (

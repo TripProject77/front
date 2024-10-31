@@ -315,6 +315,7 @@ const PostInfo = () => {
 
   useEffect(() => {
     if (postInfo && postInfo.participation) {
+      console.log(postInfo.participation)
       setParticipationCount(postInfo.participation.length);
     }
   }, [postInfo]);
@@ -338,9 +339,9 @@ const PostInfo = () => {
       <Header />
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <h5>작성자 프로필</h5>
-          <p>이름: {postInfo?.writer}</p>
-          <p>이메일: {userInfo?.email}</p>
+        <h5>작성자 프로필</h5>
+        <p>이름: {postInfo?.writer}</p>
+        <p>이메일: {userInfo?.email}</p>
       </Modal>
 
       <div className="postInfo_container">
@@ -375,8 +376,6 @@ const PostInfo = () => {
         </div>
 
         <hr />
-
-        
 
         {postInfo.postCategory !== "free" && (
           <h5 style={{ marginBottom: "10px" }}>여행 일정</h5>
