@@ -43,10 +43,6 @@ export const UserForm = ({ userInfo, updateUser }) => {
       const response = await auth.postList();
       const data = response.data;
   
-      data.forEach((post, index) => {
-        console.log(`Post ${index + 1} participation:`, post.participation);
-      });
-  
       const filteredParti = data.filter(
         (post) =>
           post.postCategory === "together" &&
@@ -62,7 +58,6 @@ export const UserForm = ({ userInfo, updateUser }) => {
       console.error("Failed to fetch post list:", error);
     }
   };
-  
 
   const handlePostWriteClick = () => {
     navigate(`/post-write`);
@@ -88,6 +83,9 @@ export const UserForm = ({ userInfo, updateUser }) => {
       console.error("Error fetching profile image:", error);
     }
   };
+
+  console.log(userInfo?.gender)
+
 
   return (
     <div className="userInfoContainer">

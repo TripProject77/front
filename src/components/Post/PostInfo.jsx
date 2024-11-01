@@ -14,6 +14,7 @@ const PostInfo = () => {
   const { id } = useParams();
   const [postInfo, setPostInfo] = useState();
   const [userInfo, setUserInfo] = useState();
+  const [postWriterInfo, setPostWriterInfo] = useState();
   const [comment, setComment] = useState(""); // 댓글 입력 값 상태
   const [commentsList, setCommentsList] = useState([]); // 댓글 목록 상태
 
@@ -25,6 +26,8 @@ const PostInfo = () => {
   const [participationCount, setParticipationCount] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+
+  const [ProfileImage, setProfileImage] = useState(null); // 사용자 이미지 변수
 
   const openModal = () => {
     setIsModalOpen(true); // 모달 열기
@@ -47,6 +50,28 @@ const PostInfo = () => {
       setUserInfo(data);
     } catch (error) {
       console.error("Failed to fetch user info:", error);
+    }
+  };
+
+  const getPostWriterInfo = async (name) => {
+    try {
+      const response = await auth.postWriterInfo(name);
+      const data = response.data;
+      console.log(data);
+      setPostWriterInfo(data);
+    } catch (error) {
+      console.error("Failed to fetch post info:", error);
+    }
+  };
+
+  const fetchProfileImage = async (username) => {
+    try {
+      const response = await auth.getImage(username);
+      const data = response.data;
+      console.log("Fetched image URL:", data.url);
+      setProfileImage(data.url);
+    } catch (error) {
+      console.error("Error fetching profile image:", error);
     }
   };
 
@@ -303,6 +328,21 @@ const PostInfo = () => {
     }
   };
 
+  const handlePostUpdateStatus = async () => {
+    try {
+      const response = await auth.postUpdateStatus(id);
+
+      if (response.status === 200) {
+        alert("동행이 마감되었습니다 !");
+      } else {
+        alert("모집 마감 실패!");
+      }
+    } catch (error) {
+      console.error("Failed to cancel status:", error);
+      alert("모집 마감 중 에러 발생");
+    }
+  };
+
   useEffect(() => {
     if (id) {
       getPostInfo(id);
@@ -314,11 +354,23 @@ const PostInfo = () => {
   }, [id]);
 
   useEffect(() => {
+    if (postInfo?.writer) {
+      getPostWriterInfo(postInfo.writer);
+    }
+  }, [postInfo?.writer]);
+
+  useEffect(() => {
     if (postInfo && postInfo.participation) {
-      console.log(postInfo.participation)
+      console.log(postInfo.participation);
       setParticipationCount(postInfo.participation.length);
     }
   }, [postInfo]);
+
+  useEffect(() => {
+    if (postWriterInfo?.username) {
+      fetchProfileImage(postWriterInfo?.username);
+    }
+  }, [postWriterInfo?.username]);
 
   // postInfo 값이 불러오기 전까지 Loding으로 표시되게
   if (!postInfo || !commentsList) {
@@ -339,9 +391,37 @@ const PostInfo = () => {
       <Header />
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <h5>작성자 프로필</h5>
-        <p>이름: {postInfo?.writer}</p>
-        <p>이메일: {userInfo?.email}</p>
+        <div className="writerInfo-container">
+          <div className="writerImage">
+            {ProfileImage ? (
+              <img
+                src={ProfileImage}
+                alt="Profile"
+                className="writerProfileImage"
+              />
+            ) : (
+              <p>프로필 이미지를 불러올 수 없습니다.</p>
+            )}
+          </div>
+
+          <div className="writerInfo">
+            <p className="writerName">{postInfo?.writer}</p>
+            <div className="writerDetails">
+              <p>{postWriterInfo?.gender}</p> ·{" "}
+              <p>
+                {postWriterInfo?.age} · {postInfo.mbti}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p className="writerIntro">{postWriterInfo?.selfIntro}</p>
+
+        <div className="writerFollow">
+          <p>팔로워 x명 · 팔로잉 x명</p>
+        </div>
+
+        <button className="followButton">팔로우 하기</button>
       </Modal>
 
       <div className="postInfo_container">
@@ -360,11 +440,10 @@ const PostInfo = () => {
 
           <div className="post-meta">
             <span className="post-author">
-              작성자: {postInfo.writer} <GoTriangleRight />{" "}
+              작성자 : {postInfo.writer} &ensp; <GoTriangleRight />
               <span className="profileInfo" onClick={openModal}>
                 프로필 확인
               </span>{" "}
-              {/* 프로필 확인 클릭 시 모달 오픈 */}
             </span>
             <span className="post-count">조회수: {postInfo.count}</span>
           </div>
@@ -419,21 +498,38 @@ const PostInfo = () => {
                 <span style={{ color: "green" }}>{postInfo.people}명</span>)
               </h5>
               <div>
-                <button
-                  className="participation-button"
-                  onClick={handleParticipate}
-                >
-                  {" "}
-                  동행 참여
-                </button>
+                {!postInfo.status ? (
+                  <>
+                    <button
+                      className="participation-button"
+                      onClick={handleParticipate}
+                    >
+                      동행 참여
+                    </button>
 
-                {postInfo.participation.includes(userInfo?.username) && (
-                  <button
-                    className="participation-button"
-                    onClick={handleParticipateCancel}
-                  >
-                    동행 참여 취소
-                  </button>
+                    {postInfo.participation.includes(userInfo?.username) && (
+                      <button
+                        className="participation-button"
+                        onClick={handleParticipateCancel}
+                      >
+                        동행 참여 취소
+                      </button>
+                    )}
+
+                    {postInfo.writer === userInfo?.name &&
+                      postInfo.people === participationCount && (
+                        <button
+                          className="participation-button"
+                          onClick={handlePostUpdateStatus}
+                        >
+                          모집 마감
+                        </button>
+                      )}
+                  </>
+                ) : (
+                  <p style={{ marginBottom: "15px", fontSize: "16px" }}>
+                    모집이 마감되었습니다 !
+                  </p>
                 )}
               </div>
             </div>

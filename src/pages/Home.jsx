@@ -204,7 +204,7 @@ const Home = () => {
                     <p className="username">{userInfo.username}</p>
                     <p className="email">{userInfo.email}</p>
                     <p className="home-participation"> 
-                      <span>내 동행</span> 
+                      <span>마이페이지</span> 
                     </p>
                   </div>
                 </div>

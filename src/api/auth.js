@@ -42,6 +42,10 @@ export const postInfo = (id) => api.get(`/post/info/${id}`);
 // 게시물 리스트
 export const postList = () => api.get("/post/postList");
 
+export const postWriterInfo = (name) => api.get(`/user/postWriterInfo/${name}`)
+
+export const postUpdateStatus = (id) => api.post(`/post/update/${id}/status`);
+
 
 // ------------ 댓글 -------------
 
