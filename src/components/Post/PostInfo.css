@@ -1,12 +1,13 @@
 @font-face {
-  font-family: 'TTLaundryGothicB';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/TTLaundryGothicB.woff2') format('woff2');
+  font-family: "TTLaundryGothicB";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2403-2@1.0/TTLaundryGothicB.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
 }
 
 .postInfo_container {
-  font-family: 'TTLaundryGothicB';
+  font-family: "TTLaundryGothicB";
   max-width: 800px;
   margin: 30px auto;
   background-color: #ffffff;
@@ -24,16 +25,30 @@
   margin-bottom: 10px;
 }
 
+.post-author {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.profileInfo {
+  cursor: pointer;
+  margin-left: 5px; 
+}
+
 .post-meta {
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
+  align-items: center;
 }
 
-.post-author, .post-count {
+.post-count {
   font-size: 14px;
   color: #666;
 }
+
 
 /* 작성 및 수정 날짜 */
 .post-dates {
@@ -53,8 +68,8 @@
 
 .travel-itinerary {
   display: flex;
-  justify-content: space-between; 
-  align-items: center; 
+  justify-content: space-between;
+  align-items: center;
 }
 
 .participation-button {
@@ -79,14 +94,14 @@
   font-size: 15px;
   line-height: 1.6;
   margin-bottom: 20px;
-  height: 200px; 
+  height: 200px;
   overflow-y: auto;
 }
 
 .title-inventory {
   display: flex;
-  justify-content: space-between; 
-  align-items: center; 
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* --- 버튼 스타일링 */
@@ -120,7 +135,6 @@
 .btn--post:hover {
   transform: scale(1.03);
 }
-
 
 /* ------------ 댓글 구현 ------------ */
 
@@ -160,7 +174,6 @@
   transform: scale(1.03);
 }
 
-
 /* 댓글 리스트 */
 .comments-list {
   margin-top: 20px;
@@ -199,15 +212,14 @@
 
 .btn--comment-cancel {
   background-color: lightseagreen;
-  padding: 5px 10px;  /* 버튼 크기 조정 */
-  font-size: 16px;    /* 작은 폰트 크기 */
+  padding: 5px 10px; /* 버튼 크기 조정 */
+  font-size: 16px; /* 작은 폰트 크기 */
   border-radius: 5px;
 }
 
 .btn--comment-cancel:hover {
   background-color: #3e8e41;
 }
-
 
 /* 새로운 날짜 및 장소 표시 상자 스타일 */
 .info-box {
@@ -234,17 +246,17 @@
   background-color: #f5efef;
   padding: 10px;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 300px; 
-  overflow: hidden; 
+  height: 300px;
+  overflow: hidden;
 }
 
 .postInfoImage {
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 20px;
 }
 
@@ -255,9 +267,9 @@
 }
 
 .info-box span svg {
-  vertical-align: middle; 
-  margin-right: 5px; 
-  font-size: 16px; 
+  vertical-align: middle;
+  margin-right: 5px;
+  font-size: 16px;
 }
 
 .hash-tag ul {
@@ -276,3 +288,85 @@
   border-radius: 20px; /* 둥근 모서리 */
   font-size: 14px; /* 폰트 크기 조정 */
 }
+
+.writerInfo-container {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+}
+
+.writerImage {
+  margin-right: 15px;
+}
+
+.writerProfileImage {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid lightgray;
+}
+
+.writerInfo {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.writerName {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.writerDetails {
+  display: flex;
+  font-size: 14px;
+  color: gray;
+  margin-top: 5px;
+}
+
+.writerIntro {
+  font-size: 16px;
+  color: gray;
+  text-align: left;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.writerFollow {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 15px;
+}
+
+.followButton {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: lightseagreen;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.followButton:hover {
+  background-color: #20b2aa;
+  transform: scale(1.03);
+}
+

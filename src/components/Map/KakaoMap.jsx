@@ -11,7 +11,6 @@ const initialState = {
   map: null,
   markers: [],
   currentPosition: null,
-  favorites: [],
   infowindow: null,
 };
 
@@ -168,42 +167,55 @@ const KakaoMap = () => {
     }
   };
 
-  useEffect(() => {
-    const script = document.createElement("script");
+// KakaoMap 컴포넌트 내부 useEffect
+useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=b0fbfc88ec237a284330f2cece3d72c4&libraries=services";
+  script.async = true;
 
-    script.src = "https://dapi.kakao.com/v2/maps/sdk.js?appkey=b0fbfc88ec237a284330f2cece3d72c4&libraries=services"; // 지도띄우기
-    script.async = true;
+  script.onload = async () => {
+    const container = document.getElementById("map");
+    const options = {
+      center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+      level: 10,
+    };
+    
+    const newMap = new window.kakao.maps.Map(container, options);
+    dispatch({ type: "SET_MAP", payload: newMap });
 
-    script.onload = () => {
-      const container = document.getElementById("map");
-      getCurrentPosition();
+    getCurrentPosition();
 
-      const options = {
-        center:
-          state.currentPosition ||
-          new window.kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
+    if (mapPlace) {
+      try {
+        // mapPlace를 기반으로 검색 요청
+        const response = await axios.get("/kakao/search", { params: { keyword: mapPlace } });
+        const places = response.data.documents;
+        if (places.length > 0) {
+          displayPlaces(places); // 지도에 검색 결과 표시
+          const firstPlace = places[0];
+          const position = new window.kakao.maps.LatLng(firstPlace.y, firstPlace.x);
 
-      const newMap = new window.kakao.maps.Map(container, options);
-      dispatch({ type: "SET_MAP", payload: newMap });
-
-      if (mapPlace && mapPlace.x && mapPlace.y) {
-        const position = new window.kakao.maps.LatLng(mapPlace.y, mapPlace.x);
-        addMarker(position, mapPlace.place_name);  // 마커 추가
-        newMap.setCenter(position);  // 해당 위치로 지도의 중심 이동
+          // mapPlace에 해당하는 장소로 지도 중심 이동
+          newMap.setCenter(position);
+          addMarker(position, firstPlace.place_name);
+        }
+      } catch (err) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: "장소를 찾을 수 없습니다.",
+        });
       }
-    };
+    }
+  };
 
-    document.head.appendChild(script);
+  document.head.appendChild(script);
 
-    return () => {
-      document.head.removeChild(script);
-      removeMarkers(); // 마커 제거
-    };
-  }, []);
+  return () => {
+    document.head.removeChild(script);
+    removeMarkers(); // 마커 제거
+  };
+}, [mapPlace]);
 
-  // 현재위치 지도에 표시
   // useEffect(() => {
   //   if (state.map && state.currentPosition) {
   //     state.map.setCenter(state.currentPosition);
@@ -211,9 +223,9 @@ const KakaoMap = () => {
   //   }
   // }, [state.map, state.currentPosition]);
 
-  const addToFavorites = (place) => {
-    dispatch({ type: "ADD_FAVORITE", payload: place });
-  };
+  // const addToFavorites = (place) => {
+  //   dispatch({ type: "ADD_FAVORITE", payload: place });
+  // };
 
   return (
     <div className="kakao-map-container">
@@ -236,40 +248,7 @@ const KakaoMap = () => {
       {state.error && <div className="kakao-map-error">{state.error}</div>}
 
       <div id="map" className="kakao-map-map"></div>
-      <ul className="kakao-map-results">
-        {state.results.map((place, index) => (
-          <li
-            key={index}
-            id={`list-item-${index}`}
-            onMouseOver={() => {
-              const marker = state.markers[index];
-              if (marker) {
-                displayInfowindow(marker, place.place_name);
-              }
-            }}
-            onMouseOut={() => {
-              const marker = state.markers[index];
-              if (marker) {
-                hideInfowindow(marker);
-              }
-            }}
-          >
-            {place.place_name} - {place.road_address_name || place.address_name}
-            <button onClick={() => addToFavorites(place)}>즐겨찾기 추가</button>
-          </li>
-        ))}
-      </ul>
-
-      <h2>즐겨찾기 목록</h2>
-
-      <ul className="kakao-map-favorites">
-        {state.favorites.map((favorite, index) => (
-          <li key={index}>
-            {favorite.place_name} -{" "}
-            {favorite.road_address_name || favorite.address_name}
-          </li>
-        ))}
-      </ul>
+      
     </div>
   );
 };

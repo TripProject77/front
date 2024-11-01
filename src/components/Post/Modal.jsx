@@ -2,7 +2,7 @@ import React from 'react';
 import './Modal.css'; // 스타일링을 위한 CSS 파일
 
 const Modal = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null; // 모달이 열리지 않았을 때는 아무것도 렌더링하지 않음
+  if (!isOpen) return null; 
 
   return (
     <div className="modal-overlay">
@@ -12,7 +12,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         </button>
 
         {children}
-        dkdk
+        
       </div>
     </div>
   );
