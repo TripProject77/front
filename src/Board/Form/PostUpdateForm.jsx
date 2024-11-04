@@ -20,7 +20,7 @@ const PostUpdateForm = () => {
   // 이미지 저장
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(
-    postInfo?.postImageurl || "choose a update image"
+    postInfo?.postImageurl || "수정할 이미지를 선택하세요 !"
   );
 
   const onUpdatePost = (e) => {

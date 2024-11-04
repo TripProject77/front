@@ -23,11 +23,20 @@ const PostInfo = () => {
   const [postImage, setPostImage] = useState(null);
   const [showButtons, setShowButtons] = useState(false);
 
+  const [loading, setLoading] = useState(false); // 팔로우 버튼 전환을 위함
+
   const [participationCount, setParticipationCount] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
 
   const [ProfileImage, setProfileImage] = useState(null); // 사용자 이미지 변수
+
+  const [follower, setFollower] = useState(0);
+  const [followingCnt, setFollowingCnt] = useState(0);
+
+  // 팔로워
+  const [userList, setUserList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
 
   const openModal = () => {
     setIsModalOpen(true); // 모달 열기
@@ -50,6 +59,23 @@ const PostInfo = () => {
       setUserInfo(data);
     } catch (error) {
       console.error("Failed to fetch user info:", error);
+    }
+  };
+
+  const getUserList = async () => {
+    try {
+      const response = await auth.list();
+      const data = response.data;
+
+      const filtered = data.filter((user) =>
+        user.userFollowMap?.some(
+          (followMap) => followMap.follow.followName === userInfo?.name
+        )
+      );
+
+      setFollowerList(filtered);
+    } catch (error) {
+      console.error("Failed to fetch user list:", error);
     }
   };
 
@@ -293,6 +319,7 @@ const PostInfo = () => {
     }
   };
 
+  // 동행 참여
   const handleParticipate = async () => {
     if (postInfo.writer === userInfo?.name) {
       alert("작성자는 참여할 수 없습니다.");
@@ -313,6 +340,7 @@ const PostInfo = () => {
     }
   };
 
+  // 동행 참여 취소
   const handleParticipateCancel = async () => {
     try {
       const response = await auth.participateCancel(id);
@@ -328,6 +356,7 @@ const PostInfo = () => {
     }
   };
 
+  // 동행 마감
   const handlePostUpdateStatus = async () => {
     try {
       const response = await auth.postUpdateStatus(id);
@@ -343,15 +372,77 @@ const PostInfo = () => {
     }
   };
 
+  // 팔로우
+  const handleFollow = async () => {
+    setUserInfo((prev) => ({
+      ...prev,
+      follow: [...prev.follow, postInfo.writer],
+    }));
+
+    setLoading(true);
+
+    try {
+      const response = await auth.follow(postInfo?.writer);
+
+      if (response.status === 200) {
+        alert("팔로우 성공!");
+      } else {
+        alert("팔로우 실패!");
+      }
+    } catch (error) {
+      console.error("팔로우 실패:", error);
+
+      setUserInfo((prev) => ({
+        ...prev,
+        follow: prev.follow.filter((user) => user !== postInfo.writer),
+      }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 팔로우 취소
+  const handleFollowCancel = async () => {
+    setUserInfo((prev) => ({
+      ...prev,
+      follow: prev.follow.filter((user) => user !== postInfo.writer),
+    }));
+
+    setLoading(true);
+
+    try {
+      const response = await auth.followCancel(postInfo?.writer);
+
+      if (response.status === 200) {
+        alert("팔로우 취소 성공!");
+      } else {
+        alert("팔로우 취소 실패!");
+      }
+    } catch (error) {
+      console.error("언팔로우 실패:", error);
+      setUserInfo((prev) => ({
+        ...prev,
+        follow: [...prev.follow, postInfo.writer],
+      }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (id) {
       getPostInfo(id);
       getCommentsList(id);
       fetchPostImage(id);
     }
-
     getUserInfo();
   }, [id]);
+
+  useEffect(() => {
+    if (userInfo?.username) {
+      getUserList();
+    }
+  }, [userInfo]);
 
   useEffect(() => {
     if (postInfo?.writer) {
@@ -361,7 +452,6 @@ const PostInfo = () => {
 
   useEffect(() => {
     if (postInfo && postInfo.participation) {
-      console.log(postInfo.participation);
       setParticipationCount(postInfo.participation.length);
     }
   }, [postInfo]);
@@ -369,6 +459,10 @@ const PostInfo = () => {
   useEffect(() => {
     if (postWriterInfo?.username) {
       fetchProfileImage(postWriterInfo?.username);
+    }
+
+    if (postWriterInfo && postWriterInfo?.follow) {
+      setFollowingCnt(postWriterInfo?.follow.length);
     }
   }, [postWriterInfo?.username]);
 
@@ -414,14 +508,22 @@ const PostInfo = () => {
             </div>
           </div>
         </div>
-
         <p className="writerIntro">{postWriterInfo?.selfIntro}</p>
-
         <div className="writerFollow">
-          <p>팔로워 x명 · 팔로잉 x명</p>
+          <p>
+            팔로워 {followerList.length} · 팔로잉 {followingCnt}
+          </p>
         </div>
 
-        <button className="followButton">팔로우 하기</button>
+        {userInfo?.follow?.includes(postInfo?.writer) ? (
+          <button className="followCancelButton" onClick={handleFollowCancel}>
+            팔로우 취소
+          </button>
+        ) : (
+          <button className="followButton" onClick={handleFollow}>
+            팔로우 하기
+          </button>
+        )}
       </Modal>
 
       <div className="postInfo_container">

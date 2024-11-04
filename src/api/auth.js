@@ -21,6 +21,9 @@ export const info = () => api.get(`/user/info`)
 // 유저 리스트
 export const list = () => api.get("/user/userList");
 
+export const follow = (name) => api.post(`/user/${name}/follow`)
+
+export const followCancel = (name) => api.delete(`/user/${name}/delete/follow`)
 
 // ------------ 게시물 -------------
 
