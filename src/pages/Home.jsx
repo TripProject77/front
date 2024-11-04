@@ -128,7 +128,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className="container">
+      <div className="HomeContainer">
         <div className="home-wrapper">
           <div className="home-title">
             <span>가보자Go</span>에 오신걸 환영합니다

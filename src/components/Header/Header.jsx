@@ -59,7 +59,7 @@ const Header = () => {
               <li>
                 <Link to="/user">마이페이지</Link>
               </li>
-              <li>
+              <li style={{paddingRight:"0px"}}>
                 <Link to="/admin">관리자</Link>
               </li>
             </>

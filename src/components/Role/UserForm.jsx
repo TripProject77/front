@@ -13,13 +13,48 @@ export const UserForm = ({ userInfo, updateUser }) => {
 
   const [profileImage, setProfileImage] = useState(null);
   const [activeTab, setActiveTab] = useState("post");
+
+  // 내가 작성한 post
   const [postList, setPostList] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
+  // 내가 참여한 post
   const [postPartiList, setPostPartiList] = useState([]);
+  const [filteredPartiPosts, setFilteredPartiPosts] = useState([]);
 
-  const [filteredPosts, setFilteredPosts] = useState([]); // 내가 작성한 post
-  const [filteredPartiPosts, setFilteredPartiPosts] = useState([]); //
 
-  console.log(filteredPartiPosts);
+  // 팔로워
+  const [userList, setUserList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
+
+  // 팔로잉
+  const [followingCnt, setFollowingCnt] = useState(0);
+
+  const getUserList = async () => {
+    try {
+      const response = await auth.list();
+      const data = response.data;
+
+      const filtered = data.filter((user) =>
+        user.userFollowMap?.some(
+          (followMap) => followMap.follow.followName === userInfo?.name
+        )
+      );
+
+      setFollowerList(filtered);
+    } catch (error) {
+      console.error("Failed to fetch user list:", error);
+    }
+  };
+
+  const fetchProfileImage = async (username) => {
+    try {
+      const response = await auth.getImage(username);
+      setProfileImage(response.data.url);
+    } catch (error) {
+      console.error("프로필 이미지를 불러오지 못했습니다.:", error);
+    }
+  };
 
   const getPostList = async () => {
     try {
@@ -34,7 +69,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
       setPostList(filtered);
       setFilteredPosts(filtered);
     } catch (error) {
-      console.error("Failed to fetch post list:", error);
+      console.error("작성한 게시글 목록을 불러오지 못했습니다.:", error);
     }
   };
 
@@ -42,20 +77,23 @@ export const UserForm = ({ userInfo, updateUser }) => {
     try {
       const response = await auth.postList();
       const data = response.data;
-  
+
+      console.log("Full API Response Data:", data);
+
       const filteredParti = data.filter(
         (post) =>
           post.postCategory === "together" &&
-          Array.isArray(post.participation) && 
-          post.participation.includes(userInfo?.name)
+          post.postPartiMap &&
+          post.postPartiMap.some(
+            (partiMap) =>
+              partiMap.participation.participationName === userInfo?.username
+          )
       );
-  
-      console.log("Filtered participation posts:", filteredParti);
-  
+
       setPostPartiList(filteredParti);
       setFilteredPartiPosts(filteredParti);
     } catch (error) {
-      console.error("Failed to fetch post list:", error);
+      console.error("참여한 게시글 목록을 불러오지 못했습니다:", error);
     }
   };
 
@@ -67,25 +105,22 @@ export const UserForm = ({ userInfo, updateUser }) => {
     navigate(`/postInfo/${postId}`);
   };
 
+  const handleFollow = () => {
+    navigate(`/Follow`);
+  };
+
   useEffect(() => {
     if (userInfo?.username) {
       fetchProfileImage(userInfo.username);
       getPostList();
       getPostPartiList();
+      getUserList();
+    }
+
+    if (userInfo && userInfo?.follow) {
+      setFollowingCnt(userInfo?.follow.length);
     }
   }, [userInfo]);
-
-  const fetchProfileImage = async (username) => {
-    try {
-      const response = await auth.getImage(username);
-      setProfileImage(response.data.url);
-    } catch (error) {
-      console.error("Error fetching profile image:", error);
-    }
-  };
-
-  console.log(userInfo?.gender)
-
 
   return (
     <div className="userInfoContainer">
@@ -131,6 +166,18 @@ export const UserForm = ({ userInfo, updateUser }) => {
           </button>
         </div>
 
+        <div className="follow">
+          <p>
+            <span onClick={handleFollow} style={{ cursor: "pointer" }}>
+              팔로워 {followerList.length}
+            </span>
+            &ensp; · &ensp;
+            <span onClick={handleFollow} style={{ cursor: "pointer" }}>
+              팔로잉 {followingCnt}
+            </span>
+          </p>
+        </div>
+
         <button
           className="update_user_btn"
           onClick={() => navigate(`/UserUpdate`)}
@@ -167,16 +214,26 @@ export const UserForm = ({ userInfo, updateUser }) => {
                       onClick={() => handlePostClick(post.id)}
                     >
                       <p>
-                        {" "}
                         <LuSubtitles className="icon" /> {post.title}
                       </p>
                       <p style={{ fontSize: "12px", color: "gray" }}>
                         <CiCalendar className="icon" /> {post.startDate} ~{" "}
                         {post.endDate}
                       </p>
-                      <p style={{ fontSize: "12px", color: "gray" }}>
-                        {" "}
-                        {new Date(post.createdDate).toLocaleDateString()}
+                      <p
+                        className=""
+                        style={{
+                          fontSize: "12px",
+                          color: "gray",
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span>
+                          {post.place} ·{" "}
+                          {new Date(post.createdDate).toLocaleDateString()}
+                        </span>
+                        <span> 조회수: {post.count}</span>
                       </p>
                     </div>
                   ))}
@@ -213,9 +270,20 @@ export const UserForm = ({ userInfo, updateUser }) => {
                         <CiCalendar className="icon" /> {post.startDate} ~{" "}
                         {post.endDate}
                       </p>
-                      <p style={{ fontSize: "12px", color: "gray" }}>
-                        {" "}
-                        {new Date(post.createdDate).toLocaleDateString()}
+                      <p
+                        className=""
+                        style={{
+                          fontSize: "12px",
+                          color: "gray",
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span>
+                          {post.place} ·{" "}
+                          {new Date(post.createdDate).toLocaleDateString()}
+                        </span>
+                        <span> 조회수: {post.count}</span>
                       </p>
                     </div>
                   ))}

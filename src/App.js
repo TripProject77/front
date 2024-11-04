@@ -20,6 +20,7 @@ import PostCom from "./pages/PostCom";
 import User from "./pages/User";
 import { UserListProvider } from "./pages/UserListProvider";
 import UserUpdateForm from "./components/Role/UserUpdateForm";
+import Follow from "./components/Role/Follow";
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/postInfo/:postId" element={<PostComInfo />} />
           <Route path="/kakao/search" element={<KakaoMap />} />
           <Route path="/UserUpdate" element={<UserUpdateForm />} />
+          <Route path="/Follow" element={<Follow />} />
 
 
           {/* 게시글 작성 함수 넘기는 용도 */}

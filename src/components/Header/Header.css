@@ -1,9 +1,10 @@
 header {
-    
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    width: 1600px;
+    padding-top: 20px;
+    margin: 20px auto;
 }
 
 .logo {

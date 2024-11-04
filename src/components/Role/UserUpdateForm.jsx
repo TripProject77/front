@@ -16,9 +16,11 @@ const UserUpdateForm = () => {
     const username = form.username.value;
     const name = form.name.value;
     const email = form.email.value;
+    const gender = form.gender.value;
+    const age = form.age.value;
     const selfIntro = form.selfIntro.value;
 
-    updateUser({ username, name, email, selfIntro });
+    updateUser({ username, name, email, gender, age, selfIntro });
   };
 
   const getUserInfo = async () => {
@@ -195,6 +197,41 @@ const UserUpdateForm = () => {
               required
               defaultValue={userInfo?.email}
             />
+          </div>
+
+          <div>
+            <label htmlFor="gender">성별</label>
+            <input
+              type="text"
+              id="gender"
+              name="gender"
+              list="genderList"
+              defaultValue={userInfo?.gender}
+              required
+            />
+            <datalist id="genderList">
+              <option value="남자" />
+              <option value="여자" />
+            </datalist>
+          </div>
+
+          <div>
+            <label htmlFor="age">나이</label>
+            <input
+              type="text"
+              id="age"
+              name="age"
+              list="ageList"
+              defaultValue={userInfo?.age}
+              required
+            />
+            <datalist id="ageList">
+              <option value="20대" />
+              <option value="30대" />
+              <option value="40대" />
+              <option value="50대" />
+              <option value="60대" />
+            </datalist>
           </div>
 
           <div>
