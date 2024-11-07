@@ -69,13 +69,13 @@ td {
   padding: 30px 0;
   text-align: center;
   vertical-align: middle;
-  height: 50px;  /* 모든 셀의 높이를 동일하게 지정 */
+  height: 50px;  
 }
 
 
 .title-button-container {
   display: flex;
-  justify-content: space-between; /* 왼쪽에 h1, 오른쪽에 검색 폼과 버튼 */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -88,7 +88,7 @@ td {
 
 .btn-admin {
   padding: 10px 15px;
-  background-color: lightseagreen;
+  background-color: red;
   color: white;
   border: none;
   border-radius: 5px;

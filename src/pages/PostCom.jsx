@@ -22,25 +22,78 @@ const Post = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const postsPerPage = 12;
 
-  // 각 게시글의 이미지 상태를 관리하기 위한 상태 추가
-  const [postImages, setPostImages] = useState({});
+  // 페이징 기능
+  const offset = currentPage * postsPerPage;
+  const currentPagePosts = filteredPosts.slice(offset, offset + postsPerPage);
+  const pageCount = Math.ceil(filteredPosts.length / postsPerPage);
+
+  // 사용자 프로필
+  const [ProfileImage, setProfileImage] = useState(null);
+
+  const [postWriterInfo, setPostWriterInfo] = useState();
 
   const getPostList = async () => {
     try {
       const response = await auth.postList();
       const data = response.data;
 
-      // postCategory가 "together"인 게시글만 필터링
       const filtered = data.filter((post) => post.postCategory === "free");
       setPostList(filtered);
       setFilteredPosts(filtered);
 
-      // 게시글 목록을 가져온 후 각 게시글의 이미지를 불러옴
-      filtered.forEach((post) => {
-        fetchPostImage(post.id); // 각 게시글의 이미지를 비동기로 불러옴
+      filtered.forEach(async (post) => {
+        const writer = post.writer;
+        try {
+          const writerInfoResponse = await auth.postWriterInfo(writer);
+          const writerData = writerInfoResponse.data;
+
+          const profileImageResponse = await auth.getImage(writerData.username);
+          const profileImageData = profileImageResponse.data;
+
+          setPostList((prevPosts) =>
+            prevPosts.map((p) =>
+              p.writer === writer
+                ? {
+                    ...p,
+                    writerInfo: writerData,
+                    profileImage: profileImageData.url,
+                  }
+                : p
+            )
+          );
+        } catch (error) {
+          console.error(
+            "게시글 프로필 이미지를 불러올 수 없습니다.:",
+            error
+          );
+        }
       });
     } catch (error) {
-      console.error("Failed to fetch post list:", error);
+      console.error("게시글 리스트를 불러올 수 없습니다.", error);
+    }
+  };
+
+  const getPostWriterInfo = async (name) => {
+    try {
+      const response = await auth.postWriterInfo(name);
+      const data = response.data;
+      console.log(data);
+      setPostWriterInfo(data);
+    } catch (error) {
+      console.error("게시글 작성자 정보를 불러올 수 없습니다.:", error);
+    }
+  };
+
+  const fetchProfileImage = async (username) => {
+    try {
+      const response = await auth.getImage(username);
+      const data = response.data;
+      setProfileImage(data.url);
+    } catch (error) {
+      console.error(
+        "로그인 사용자 프로필 이미지를 불러올 수 없습니다.:",
+        error
+      );
     }
   };
 
@@ -50,7 +103,7 @@ const Post = () => {
       const data = response.data;
       setUserInfo(data);
     } catch (error) {
-      console.error("Failed to fetch user info:", error);
+      console.error("로그인 된 사용자 정보를 불러올 수 없습니다.", error);
     }
   };
 
@@ -65,7 +118,7 @@ const Post = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
-  // 검색 관련 함수
+  // 검색 함수
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -80,7 +133,6 @@ const Post = () => {
     setCurrentPage(0);
   };
 
-  // url 이동 기능
   const handleClick = () => {
     navigate("/free-post-write");
   };
@@ -89,38 +141,39 @@ const Post = () => {
     navigate(`/postInfo/${postId}`);
   };
 
-  // 페이징 기능
-  const offset = currentPage * postsPerPage;
-  const currentPagePosts = filteredPosts.slice(offset, offset + postsPerPage);
-  const pageCount = Math.ceil(filteredPosts.length / postsPerPage);
-
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
-  };
-
-  // 게시글의 이미지를 서버에서 가져오는 함수
-  const fetchPostImage = async (postId) => {
-    try {
-      const response = await auth.getPostImage(postId);
-      const imageUrl = response.data.url;
-      setPostImages((prevImages) => ({ ...prevImages, [postId]: imageUrl }));
-    } catch (error) {
-      console.error("Error fetching post image:", error);
-    }
   };
 
   useEffect(() => {
     getPostList();
     getUserInfo();
+    getPostWriterInfo();
   }, []);
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    if (postWriterInfo) {
+      if (postWriterInfo?.username) {
+        fetchProfileImage(postWriterInfo.username);
+      }
+    }
+  }, [postWriterInfo]);
+
+  useEffect(() => {
+    if (postWriterInfo) {
+      getPostWriterInfo(postWriterInfo);
+    }
+  }, [postWriterInfo]);
 
   return (
     <>
       <Header />
       <div className="container">
         <div className="title-button-container">
-          <BsPencilSquare style={{ margin: "15px" }} />
-          <h2>자유 게시판</h2>
+          <BsPencilSquare style={{ margin: "0px 20px 30px 0px" }} />
+          <h2 style={{ marginBottom: "30px" }}>자유 게시판</h2>
 
           <div className="search-and-button-container">
             <form onSubmit={handleSearch} className="search-form">
@@ -142,48 +195,53 @@ const Post = () => {
         <hr style={{ marginBottom: "50px;" }} />
 
         <div className="card-container">
-          {currentPagePosts.map((post, index) => (
+          {postList.map((post) => (
             <div
-              key={index}
               className="card"
+              key={post.id}
               onClick={() => handleCardClick(post.id)}
             >
-              <div>
-                <p>
-                  <LuSubtitles className="icon" /> {post.title}
-                </p>
-                <div className="card-footer">
-                  <p>
-                    <TbPencilCheck className="icon" /> {post.writer}
-                  </p>
-
-                  <div className="right-info">
-                  <p style={{ fontSize: "12px", color: "gray" }}> - {formatDate(post.createdDate)}</p>
-                  <p style={{ fontSize: "12px", color: "gray" }}>조회수: {post.count}</p>
-                  </div>
-                </div>
-
-                <hr className="postHr"></hr>
-              </div>
-
-              <div className="postImage">
-                {postImages[post.id] ? (
+              <div className="writerImage">
+                {post.profileImage ? (
                   <img
-                    src={postImages[post.id]}
-                    alt="postImage"
-                    className="postImage"
+                    src={post.profileImage}
+                    alt={`${post.writer}'s Profile`}
+                    className="freePostProfileImage"
                   />
                 ) : (
-                  <p>이미지를 불러올 수 없습니다.</p>
+                  <p>No Image</p>
                 )}
+                <span style={{ marginLeft: "5px" }}>
+                  <p style={{ marginTop: "5px", marginBottom: "0px" }}>
+                    {post.writer}
+                  </p>
+                  <p style={{ fontSize: "12px", color: "gray" }}>
+                    {formatDate(post.createdDate)}
+                  </p>
+                </span>
               </div>
 
-              <p className="postContent">
-                <MdContentPaste className="icon" />{" "}
-                {post.content.length > 100
-                  ? post.content.substring(0, 100) + "..."
-                  : post.content}
-              </p>
+              <div className="postContent">
+                <div className="postTitle">
+                  <p>
+                    <LuSubtitles className="icon" /> {post.title}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "gray",
+                      marginLeft: "auto",
+                    }}
+                  >
+                    조회수: {post.count}
+                  </p>
+                </div>
+                <div className="postBody">
+                  {post.content.length > 140
+                    ? post.content.substring(0, 140) + "..."
+                    : post.content}
+                </div>
+              </div>
             </div>
           ))}
         </div>

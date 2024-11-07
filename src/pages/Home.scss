@@ -2,7 +2,7 @@
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
 
-.HomeContainer{
+.HomeContainer {
   font-family: 'Malgun Gothic', sans-serif;
   width: 1600px;
   margin: 50px auto;
@@ -53,7 +53,9 @@
   }
 
   /* 텍스트나 버튼들을 겹치기 위해 z-index 설정 */
-  .home-title, .home-contents, .write-post-btn {
+  .home-title,
+  .home-contents,
+  .write-post-btn {
     position: relative;
     z-index: 2;
     color: white;
@@ -188,45 +190,55 @@
 }
 
 .post-card {
+  position: relative;
   width: 322px;
-  background-color: #ffffff;
-  padding: 10px;
+  height: 225px;
+  background-size: cover;
+  background-position: center;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 5px;
+  overflow: hidden;
   transition: transform 0.2s;
+  color: white;
 }
+
+.post-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.post-card-content {
+  position: absolute;
+  bottom: 1px;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  color: white;
+  z-index: 2;
+}
+
+.post-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.post-card-period,
+.post-card-details {
+  font-size: 13px;
+  color: #f5f5f5;
+}
+
+
 
 .post-card:hover {
   transform: scale(1.03);
-}
-
-
-.post-card-content {
-  display: flex;
-  flex-direction: column;
-}
-
-
-.post-card-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 12px;
-  color: black;
-}
-
-
-.post-card-details {
-  margin-bottom: 8px;
-  color: gray;
-  font-size: 13px;
-}
-
-
-.post-card-period {
-  margin-top: 8px;
-  color: gray;
-  font-size: 13px;
 }
 
 
@@ -236,7 +248,7 @@
   align-items: center;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 282px;
+  height: 300px;
   margin-top: 47px;
 }
 
@@ -280,12 +292,15 @@
   margin-top: 5px;
 }
 
-.username {
-  font-size: 16px;
-  margin-bottom: 5px;
+.userInfo span:hover {
+  font-size: 15px;
 }
 
-.email {
+.homeUsername {
+  font-size: 16px;
+}
+
+.homeEmail {
   font-size: 14px;
   color: #666;
   margin-bottom: 2px;
@@ -366,7 +381,7 @@
   gap: 40px;
   padding: 30px;
   border-radius: 10px;
-  background-color: white; 
+  background-color: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-top: 50px;
   max-width: 1600px;
@@ -384,7 +399,7 @@
     font-size: 22px;
     font-weight: bold;
     margin-bottom: 15px;
-    color: #333; 
+    color: #333;
   }
 
   hr {
@@ -398,7 +413,7 @@
     li {
       margin-bottom: 12px;
       padding: 15px;
-      background-color: #f5f5f5; 
+      background-color: #f5f5f5;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       display: flex;
@@ -407,19 +422,19 @@
       transition: transform 0.2s, box-shadow 0.2s;
 
       &:hover {
-        transform: scale(1.03); 
+        transform: scale(1.03);
         box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
       }
 
       p {
         font-size: 16px;
-        color: #333; 
+        color: #333;
         display: flex;
         align-items: center;
 
         svg {
           margin-right: 10px;
-          color: #76c776; 
+          color: #76c776;
         }
       }
     }

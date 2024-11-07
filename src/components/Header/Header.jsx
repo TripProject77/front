@@ -42,10 +42,10 @@ const Header = () => {
             </>
           ) : (
             <>
-              <li><h5>{userInfo?.name}님 환영합니다</h5></li>
+              <li><h5 class="user-text">{userInfo?.name}님 환영합니다</h5></li>
+
 
               <li className="dropdown">
-
                 <button className="dropbtn" onClick={toggleDropdown}>
                   게시판
                 </button>
@@ -59,7 +59,7 @@ const Header = () => {
               <li>
                 <Link to="/user">마이페이지</Link>
               </li>
-              <li style={{paddingRight:"0px"}}>
+              <li style={{ paddingRight: "0px" }}>
                 <Link to="/admin">관리자</Link>
               </li>
             </>

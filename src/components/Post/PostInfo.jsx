@@ -11,39 +11,52 @@ import "./PostInfo.css";
 const PostInfo = () => {
   const navigate = useNavigate();
 
+  // 게시글 id
   const { id } = useParams();
+
   const [postInfo, setPostInfo] = useState();
   const [userInfo, setUserInfo] = useState();
-  const [postWriterInfo, setPostWriterInfo] = useState();
-  const [comment, setComment] = useState(""); // 댓글 입력 값 상태
-  const [commentsList, setCommentsList] = useState([]); // 댓글 목록 상태
 
-  const [editingCommentId, setEditingCommentId] = useState(null); // 수정 중인 댓글 ID
-  const [editingCommentText, setEditingCommentText] = useState(""); // 수정 중인 댓글 텍스트
+  const [postWriterInfo, setPostWriterInfo] = useState();
+
   const [postImage, setPostImage] = useState(null);
   const [showButtons, setShowButtons] = useState(false);
 
-  const [loading, setLoading] = useState(false); // 팔로우 버튼 전환을 위함
+  // 댓글 입력 값
+  const [comment, setComment] = useState("");
+  // 댓글 목록
+  const [commentsList, setCommentsList] = useState([]);
 
+  // 수정 중인 댓글 ID
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  // 수정 중인 댓글 텍스트 값
+  const [editingCommentText, setEditingCommentText] = useState("");
+
+  // 동행 참여자 수
   const [participationCount, setParticipationCount] = useState(0);
 
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+  // 모달 상태 관리
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [ProfileImage, setProfileImage] = useState(null); // 사용자 이미지 변수
+  // 사용자 프로필
+  const [ProfileImage, setProfileImage] = useState(null);
 
-  const [follower, setFollower] = useState(0);
-  const [followingCnt, setFollowingCnt] = useState(0);
+  // 팔로잉
+  const [followingList, setFollowingList] = useState(postWriterInfo?.follow);
 
   // 팔로워
   const [userList, setUserList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
 
+  // 팔로우 버튼 전환을 위함
+  const [loading, setLoading] = useState(false);
+
   const openModal = () => {
-    setIsModalOpen(true); // 모달 열기
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-    setIsModalOpen(false); // 모달 닫기
+    setIsModalOpen(false);
   };
 
   const toggleButtons = () => {
@@ -58,7 +71,7 @@ const PostInfo = () => {
       console.log("Fetched userInfo:", data);
       setUserInfo(data);
     } catch (error) {
-      console.error("Failed to fetch user info:", error);
+      console.error("로그인 사용자 정보를 불러올 수 없습니다.:", error);
     }
   };
 
@@ -69,13 +82,13 @@ const PostInfo = () => {
 
       const filtered = data.filter((user) =>
         user.userFollowMap?.some(
-          (followMap) => followMap.follow.followName === userInfo?.name
+          (followMap) => followMap.follow.followName === postWriterInfo?.name
         )
       );
 
       setFollowerList(filtered);
     } catch (error) {
-      console.error("Failed to fetch user list:", error);
+      console.error("유저 리스트를 불러올 수 없습니다.:", error);
     }
   };
 
@@ -86,7 +99,7 @@ const PostInfo = () => {
       console.log(data);
       setPostWriterInfo(data);
     } catch (error) {
-      console.error("Failed to fetch post info:", error);
+      console.error("게시글 작성자 정보를 불러올 수 없습니다.:", error);
     }
   };
 
@@ -97,7 +110,10 @@ const PostInfo = () => {
       console.log("Fetched image URL:", data.url);
       setProfileImage(data.url);
     } catch (error) {
-      console.error("Error fetching profile image:", error);
+      console.error(
+        "로그인 사용자 프로필 이미지를 불러올 수 없습니다.:",
+        error
+      );
     }
   };
 
@@ -109,7 +125,7 @@ const PostInfo = () => {
       setPostInfo(data);
       console.log(data);
     } catch (error) {
-      console.error("Failed to fetch post info:", error);
+      console.error("게시글 정보를 불러올 수 없습니다.:", error);
     }
   };
 
@@ -123,7 +139,7 @@ const PostInfo = () => {
         alert("게시글 수정 실패 !!");
       }
     } catch (error) {
-      console.error("Failed to update post info:", error);
+      console.error("게시글을 수정할 수 없습니다.:", error);
       alert("게시글 수정 중 에러 발생");
     }
   };
@@ -198,14 +214,14 @@ const PostInfo = () => {
         alert("댓글 작성 성공 !");
       }
     } catch (error) {
-      console.error("Failed to add comment:", error);
+      console.error("댓글을 작성할 수 없습니다:", error);
       alert("댓글 작성 중 에러 발생");
     }
   };
 
   // 자유 게시글 수정
   const handleFreeEditClick = () => {
-    if (userInfo?.username === "admin0515") {
+    if (userInfo?.username === "admin0515" || userInfo?.name === postInfo?.writer) {
       navigate(`/FreePostUpdateForm`, { state: { postId: postInfo.id } });
     } else {
       if (userInfo?.name !== postInfo?.writer) {
@@ -259,7 +275,7 @@ const PostInfo = () => {
         alert("댓글 수정 실패!");
       }
     } catch (error) {
-      console.error("Failed to update comment:", error);
+      console.error("댓글을 수정할 수 없습니다.:", error);
       alert("댓글 수정 중 에러 발생");
     }
   };
@@ -281,7 +297,7 @@ const PostInfo = () => {
         }
       }
     } catch (error) {
-      console.error("Failed to delete comment:", error);
+      console.error("댓글을 삭제할 수 없습니다.:", error);
       alert("댓글 삭제 중 에러 발생");
     }
   };
@@ -292,7 +308,7 @@ const PostInfo = () => {
       const response = await auth.CommentList(postId);
       setCommentsList(response.data);
     } catch (error) {
-      console.error("Failed to fetch comments:", error);
+      console.error("댓글을 불러올 수 없습니다.:", error);
     }
   };
 
@@ -315,7 +331,7 @@ const PostInfo = () => {
       console.log("Fetched image URL:", data.url);
       setPostImage(data.url);
     } catch (error) {
-      console.error("Error fetching post image:", error);
+      console.error("게시글 이미지를 불러올 수 없습니다.:", error);
     }
   };
 
@@ -331,11 +347,16 @@ const PostInfo = () => {
 
       if (response.status === 200) {
         alert("참여 성공!");
+
+        setPostInfo((prev) => ({
+          ...prev,
+          participation: [...(prev.participation || []), userInfo?.username],
+        }));
       } else {
         alert("참여 실패!");
       }
     } catch (error) {
-      console.error("Failed to participate:", error);
+      console.error("동행 참여를 할 수 없습니다.:", error);
       alert("참여 중 에러 발생");
     }
   };
@@ -347,11 +368,18 @@ const PostInfo = () => {
 
       if (response.status === 200) {
         alert("동행 참여 취소 성공!");
+
+        setPostInfo((prev) => ({
+          ...prev,
+          participation: prev.participation.filter(
+            (participant) => participant !== userInfo?.username // userInfo?.username을 제외한 것만 남김
+          ),
+        }));
       } else {
-        alert("참여 참여 취소 실패!");
+        alert("참여 취소 실패!");
       }
     } catch (error) {
-      console.error("Failed to cancel participate:", error);
+      console.error("동행 참여 취소를 할 수 없습니다.:", error);
       alert("참여 취소 중 에러 발생");
     }
   };
@@ -367,35 +395,28 @@ const PostInfo = () => {
         alert("모집 마감 실패!");
       }
     } catch (error) {
-      console.error("Failed to cancel status:", error);
+      console.error("동행 마감을 할 수 없습니다.:", error);
       alert("모집 마감 중 에러 발생");
     }
   };
 
   // 팔로우
   const handleFollow = async () => {
-    setUserInfo((prev) => ({
-      ...prev,
-      follow: [...prev.follow, postInfo.writer],
-    }));
-
     setLoading(true);
-
     try {
-      const response = await auth.follow(postInfo?.writer);
-
+      const response = await auth.follow(postInfo.writer);
       if (response.status === 200) {
         alert("팔로우 성공!");
+        setUserInfo((prev) => ({
+          ...prev,
+          follow: [...(prev.follow || []), postInfo.writer],
+        }));
+        getUserList(); // 팔로우 성공 시 followerList 갱신
       } else {
         alert("팔로우 실패!");
       }
     } catch (error) {
       console.error("팔로우 실패:", error);
-
-      setUserInfo((prev) => ({
-        ...prev,
-        follow: prev.follow.filter((user) => user !== postInfo.writer),
-      }));
     } finally {
       setLoading(false);
     }
@@ -403,27 +424,21 @@ const PostInfo = () => {
 
   // 팔로우 취소
   const handleFollowCancel = async () => {
-    setUserInfo((prev) => ({
-      ...prev,
-      follow: prev.follow.filter((user) => user !== postInfo.writer),
-    }));
-
     setLoading(true);
-
     try {
-      const response = await auth.followCancel(postInfo?.writer);
-
+      const response = await auth.followCancel(postInfo.writer);
       if (response.status === 200) {
         alert("팔로우 취소 성공!");
+        setUserInfo((prev) => ({
+          ...prev,
+          follow: prev.follow.filter((user) => user !== postInfo.writer),
+        }));
+        getUserList(); // 팔로우 취소 시 followerList 갱신
       } else {
         alert("팔로우 취소 실패!");
       }
     } catch (error) {
       console.error("언팔로우 실패:", error);
-      setUserInfo((prev) => ({
-        ...prev,
-        follow: [...prev.follow, postInfo.writer],
-      }));
     } finally {
       setLoading(false);
     }
@@ -439,7 +454,7 @@ const PostInfo = () => {
   }, [id]);
 
   useEffect(() => {
-    if (userInfo?.username) {
+    if (userInfo) {
       getUserList();
     }
   }, [userInfo]);
@@ -457,14 +472,18 @@ const PostInfo = () => {
   }, [postInfo]);
 
   useEffect(() => {
-    if (postWriterInfo?.username) {
-      fetchProfileImage(postWriterInfo?.username);
+    if (postWriterInfo) {
+      if (postWriterInfo?.username) {
+        fetchProfileImage(postWriterInfo.username);
+      }
+      if (postWriterInfo?.follow) {
+        setFollowingList(postWriterInfo.follow); // followingList 최신화
+      }
+      getUserList(); // 다시 followerList 최신화
     }
+  }, [postWriterInfo]);
 
-    if (postWriterInfo && postWriterInfo?.follow) {
-      setFollowingCnt(postWriterInfo?.follow.length);
-    }
-  }, [postWriterInfo?.username]);
+  useEffect(() => {}, [followerList]);
 
   // postInfo 값이 불러오기 전까지 Loding으로 표시되게
   if (!postInfo || !commentsList) {
@@ -476,9 +495,16 @@ const PostInfo = () => {
     navigate(`/post`);
   };
 
+  const handleMyPage = () => {
+    navigate(`/user`);
+  };
+
+  // 지도 이동
   const handleMap = () => {
     navigate(`/kakao/search`, { state: { mapPlace: postInfo.place } });
   };
+
+  console.log(followerList);
 
   return (
     <>
@@ -499,7 +525,7 @@ const PostInfo = () => {
           </div>
 
           <div className="writerInfo">
-            <p className="writerName">{postInfo?.writer}</p>
+            <p className="writerName">{postWriterInfo?.username}</p>
             <div className="writerDetails">
               <p>{postWriterInfo?.gender}</p> ·{" "}
               <p>
@@ -511,19 +537,24 @@ const PostInfo = () => {
         <p className="writerIntro">{postWriterInfo?.selfIntro}</p>
         <div className="writerFollow">
           <p>
-            팔로워 {followerList.length} · 팔로잉 {followingCnt}
+            팔로워 {followerList?.length} · 팔로잉 {followingList?.length}
           </p>
         </div>
 
-        {userInfo?.follow?.includes(postInfo?.writer) ? (
-          <button className="followCancelButton" onClick={handleFollowCancel}>
-            팔로우 취소
-          </button>
-        ) : (
-          <button className="followButton" onClick={handleFollow}>
-            팔로우 하기
-          </button>
-        )}
+        {userInfo &&
+          (userInfo?.follow?.includes(postInfo?.writer) ? (
+            <button className="followCancelButton" onClick={handleFollowCancel}>
+              팔로우 취소
+            </button>
+          ) : postInfo.writer === userInfo.username ? (
+            <button className="followButton" onClick={handleMyPage}>
+              마이페이지
+            </button>
+          ) : (
+            <button className="followButton" onClick={handleFollow}>
+              팔로우 하기
+            </button>
+          ))}
       </Modal>
 
       <div className="postInfo_container">
@@ -602,12 +633,14 @@ const PostInfo = () => {
               <div>
                 {!postInfo.status ? (
                   <>
-                    <button
-                      className="participation-button"
-                      onClick={handleParticipate}
-                    >
-                      동행 참여
-                    </button>
+                    {!postInfo.participation.includes(userInfo?.username) && (
+                      <button
+                        className="participation-button"
+                        onClick={handleParticipate}
+                      >
+                        동행 참여
+                      </button>
+                    )}
 
                     {postInfo.participation.includes(userInfo?.username) && (
                       <button

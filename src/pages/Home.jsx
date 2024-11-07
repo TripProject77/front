@@ -13,7 +13,6 @@ import { LoginContext } from "../contexts/LoginContextProvider";
 
 import "./Home.scss";
 
-
 const Home = () => {
   const navigate = useNavigate();
 
@@ -29,20 +28,29 @@ const Home = () => {
   const { isLogin, userInfo, logout } = useContext(LoginContext);
   const [homeProfileImage, setHomeProfileImage] = useState(null); // 사용자 이미지 변수
   const [highlightedIndex, setHighlightedIndex] = useState(0); // 강조 순서 상태 변수
+  const [postImages, setPostImages] = useState({});
 
   const goToPostForm = () => {
     navigate("/post");
   };
 
+  const handleMyPageClick = () => {
+    navigate("/user");
+  };
+
   // 게시글 목록 api
   const getPosts = async () => {
     try {
-      const response = await axios.get("/post/postList"); 
-      const data = response.data; 
+      const response = await axios.get("/post/postList");
+      const data = response.data;
 
       const filteredPosts = data
         .filter((post) => post.postCategory === "together")
         .slice(0, 3);
+
+      filteredPosts.forEach((post) => {
+        fetchPostImage(post.id);
+      });
 
       setPosts(filteredPosts);
     } catch (error) {
@@ -91,16 +99,25 @@ const Home = () => {
       });
   };
 
-  // 사용자 이미지 api
+  // 사용자 프로필
   const fetchHomeProfileImage = async (username) => {
     try {
       const response = await auth.getImage(username);
       const data = response.data;
       console.log("Fetched image URL:", data.url);
       setHomeProfileImage(data.url);
-
     } catch (error) {
       console.error("Error fetching profile image:", error);
+    }
+  };
+
+  const fetchPostImage = async (postId) => {
+    try {
+      const response = await auth.getPostImage(postId);
+      const imageUrl = response.data.url;
+      setPostImages((prevImages) => ({ ...prevImages, [postId]: imageUrl }));
+    } catch (error) {
+      console.error("Error fetching post image:", error);
     }
   };
 
@@ -109,20 +126,20 @@ const Home = () => {
     fetchInternationalDestinations();
     getPosts();
   }, []);
-  
+
   // userInfo가 변경될 때만 실행
   useEffect(() => {
     if (userInfo?.username) {
       fetchHomeProfileImage(userInfo.username);
     }
   }, [userInfo]);
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setHighlightedIndex((prevIndex) => (prevIndex + 1) % 10); // 10개 항목 순환
     }, 2000);
-  
-    return () => clearInterval(interval); 
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -144,18 +161,22 @@ const Home = () => {
 
         <div className="layout-container">
           <div className="home-container">
-            <h3>최근 동행 게시글</h3>
-            <br />
-            <hr />
             <div className="post-card-container">
               {posts.length === 0 ? (
                 <div>게시글이 없습니다.</div>
               ) : (
                 posts.map((post) => (
-                  <div className="post-card" key={post.id}>
-                    <Link to={`/postInfo/${post.id}`}>
+                  <Link to={`/postInfo/${post.id}`}>
+                    <div
+                      className="post-card"
+                      key={post.id}
+                      style={{
+                        backgroundImage: postImages[post.id]
+                          ? `url(${postImages[post.id]})`
+                          : "none", // 이미지가 없을 때 기본값
+                      }}
+                    >
                       <div className="post-card-content">
-
                         {/* 제목 */}
                         <div className="post-card-title">
                           <LuSubtitles className="icon" /> {post.title}
@@ -178,8 +199,8 @@ const Home = () => {
                           </div>
                         </div>
                       </div>
-                    </Link>
-                  </div>
+                    </div>
+                  </Link>
                 ))
               )}
             </div>
@@ -201,10 +222,10 @@ const Home = () => {
                     )}
                   </div>
                   <div className="userInfo">
-                    <p className="username">{userInfo.username}</p>
-                    <p className="email">{userInfo.email}</p>
-                    <p className="home-participation"> 
-                      <span>마이페이지</span> 
+                    <p className="homeUsername">{userInfo.username}</p>
+                    <p className="homeEmail">{userInfo.email}</p>
+                    <p className="home-participation">
+                      <span onClick={handleMyPageClick}>마이페이지</span>
                     </p>
                   </div>
                 </div>
@@ -256,7 +277,7 @@ const Home = () => {
                 {internationalDestinations.map((destination, index) => (
                   <li
                     key={index}
-                    className={index === highlightedIndex ? "highlighted" : ""} 
+                    className={index === highlightedIndex ? "highlighted" : ""}
                   >
                     <p>
                       <HiOutlineLocationMarker /> {destination.searchWord} -{" "}

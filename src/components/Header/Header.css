@@ -111,3 +111,7 @@ header {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.user-text {
+    font-weight: 1000;
+  }
