@@ -23,12 +23,12 @@ export const UserForm = ({ userInfo, updateUser }) => {
   const [filteredPartiPosts, setFilteredPartiPosts] = useState([]);
 
 
-  // 팔로워
+  // 팔로워 ( 내가 받은거 )
   const [userList, setUserList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
 
-  // 팔로잉
-  const [followingCnt, setFollowingCnt] = useState(0);
+  // 팔로잉 ( 내가 한거 )
+  const [followingList, setFollowingList] = useState(userInfo?.follow);
 
   const getUserList = async () => {
     try {
@@ -102,7 +102,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
   };
 
   const handlePostClick = (postId) => {
-    navigate(`/postInfo/${postId}`);
+    navigate(`/post`);
   };
 
   const handleFollow = () => {
@@ -117,8 +117,8 @@ export const UserForm = ({ userInfo, updateUser }) => {
       getUserList();
     }
 
-    if (userInfo && userInfo?.follow) {
-      setFollowingCnt(userInfo?.follow.length);
+    if (userInfo?.follow) {
+      setFollowingList(userInfo.follow);
     }
   }, [userInfo]);
 
@@ -132,7 +132,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
                 <img
                   src={profileImage}
                   alt="Profile"
-                  className="HomeProfileImage"
+                  className="userProfileImage"
                 />
               ) : (
                 <p>프로필 이미지를 불러올 수 없습니다.</p>
@@ -173,7 +173,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
             </span>
             &ensp; · &ensp;
             <span onClick={handleFollow} style={{ cursor: "pointer" }}>
-              팔로잉 {followingCnt}
+              팔로잉 {followingList?.length}
             </span>
           </p>
         </div>
@@ -210,7 +210,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
                   {filteredPosts.map((post) => (
                     <div
                       key={post.id}
-                      className="postCard"
+                      className="postCardList"
                       onClick={() => handlePostClick(post.id)}
                     >
                       <p>
@@ -259,7 +259,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
                   {filteredPartiPosts.map((post) => (
                     <div
                       key={post.id}
-                      className="postCard"
+                      className="postCardList"
                       onClick={() => handlePostClick(post.id)}
                     >
                       <p>

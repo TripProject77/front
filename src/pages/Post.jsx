@@ -23,10 +23,16 @@ const Post = () => {
   const [endDate, setEndDate] = useState(""); // 필터링할 종료 날짜
 
   const [currentPage, setCurrentPage] = useState(0);
-  const postsPerPage = 12;
+  const postsPerPage = 8;
 
   // 각 게시글의 이미지 상태를 관리하기 위한 상태 추가
   const [postImages, setPostImages] = useState({});
+
+  const offset = currentPage * postsPerPage;
+  const currentPagePosts = filteredPosts.slice(offset, offset + postsPerPage);
+  const pageCount = Math.ceil(filteredPosts.length / postsPerPage);
+
+  const [nightsText, setNightsText] = useState("");
 
   const getPostList = async () => {
     try {
@@ -38,9 +44,8 @@ const Post = () => {
       setPostList(filtered);
       setFilteredPosts(filtered);
 
-      // 게시글 목록을 가져온 후 각 게시글의 이미지를 불러옴
       filtered.forEach((post) => {
-        fetchPostImage(post.id); // 각 게시글의 이미지를 비동기로 불러옴
+        fetchPostImage(post.id);
       });
     } catch (error) {
       console.error("Failed to fetch post list:", error);
@@ -67,18 +72,27 @@ const Post = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
-  useEffect(() => {
-    getPostList();
-    getUserInfo();
-  }, []);
+  // 날짜 계산 함수
+  const calculateNights = (start, end) => {
+    if (!start || !end) {
+      return "0박";
+    }
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const differenceInTime = endDate.getTime() - startDate.getTime();
+    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+    return differenceInDays > 0 ? `${differenceInDays}박` : "0박";
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
 
     const filtered = postList.filter((post) => {
-
       const isWithinDateRange =
-        (!startDate || startDate >= post.startDate) && (!endDate || endDate <= post.endDate);
+        (!startDate || startDate >= post.startDate) &&
+        (!endDate || endDate <= post.endDate);
 
       const matchesSearchTerm =
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -89,22 +103,6 @@ const Post = () => {
 
     setFilteredPosts(filtered);
     setCurrentPage(0);
-  };
-
-  const handleClick = () => {
-    navigate("/post-write");
-  };
-
-  const handleCardClick = (postId) => {
-    navigate(`/postInfo/${postId}`);
-  };
-
-  const offset = currentPage * postsPerPage;
-  const currentPagePosts = filteredPosts.slice(offset, offset + postsPerPage);
-  const pageCount = Math.ceil(filteredPosts.length / postsPerPage);
-
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
   };
 
   // 게시글의 이미지를 서버에서 가져오는 함수
@@ -118,53 +116,96 @@ const Post = () => {
     }
   };
 
+  const handleStartDateChange = (e) => {
+    setStartDate(e.target.value);
+    setNightsText(calculateNights(e.target.value, endDate));
+  };
+
+  const handleEndDateChange = (e) => {
+    setEndDate(e.target.value);
+    setNightsText(calculateNights(startDate, e.target.value));
+  };
+
+  const handleClick = () => {
+    navigate("/post-write");
+  };
+
+  const handleCardClick = (postId) => {
+    navigate(`/postInfo/${postId}`);
+  };
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  useEffect(() => {
+    getPostList();
+    getUserInfo();
+  }, []);
+
   return (
     <>
       <Header />
-      <div className="container">
+      <div className="PostContainer">
         <div className="title-button-container">
-          <BsPencilSquare style={{ margin: "15px" }} />
-          <h2>동행 게시판</h2>
-
+          <BsPencilSquare style={{ margin: "0px 20px 30px 0px" }} />
+          <h2 style={{ marginBottom: "30px" }}>동행 게시판</h2>
           <div className="search-and-button-container">
             <form onSubmit={handleSearch} className="search-form">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="키워드를 입력하세요"
+                placeholder="게시글 제목 검색"
                 className="search-input"
               />
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="date-input"
-              />
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="date-input"
-              />
+              <div className="date-range-container">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  className="post-date-input"
+                  placeholder="시작 날짜"
+                />
+                <span className="nights-text">{nightsText || "0박"}</span>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  className="post-date-input"
+                  placeholder="종료 날짜"
+                />
+              </div>
+
               <button type="submit" className="search-button">
                 검색
               </button>
             </form>
             <button onClick={handleClick}>새 글 작성</button>
           </div>
-        </div>
-
+</div>
         <hr style={{ marginBottom: "50px;" }} />
 
-        <div className="card-container">
+        <div className="postCard-container">
           {currentPagePosts.map((post, index) => (
             <div
               key={index}
-              className="card"
+              className="postCard"
               onClick={() => handleCardClick(post.id)}
             >
-              <div>
+              <div className="collectPostImage">
+                {postImages[post.id] ? (
+                  <img
+                    src={postImages[post.id]}
+                    alt="postImage"
+                    className="postImage"
+                  />
+                ) : (
+                  <p>이미지를 불러올 수 없습니다.</p>
+                )}
+              </div>
+
+              <div classname="post-content" style={{ padding: "20px 0 0 2px" }}>
                 <p>
                   <LuSubtitles className="icon" /> {post.title}
                 </p>
@@ -177,12 +218,9 @@ const Post = () => {
                   <CiCalendar className="icon" /> {post.startDate} ~{" "}
                   {post.endDate}
                 </p>
-                <p style={{ fontSize: "12px", color: "gray" }}> - {formatDate(post.createdDate)}</p>
 
-                <hr className="postHr"></hr>
                 <div className="right-info">
-                  
-                  <p>조회수: {post.count}</p>
+                  <p>- 조회수: {post.count}</p>
                 </div>
               </div>
             </div>

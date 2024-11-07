@@ -318,6 +318,7 @@
 }
 
 .writerName {
+  display: flex;
   font-size: 18px;
   font-weight: bold;
   color: #333;
@@ -336,17 +337,16 @@
   color: gray;
   text-align: left;
   padding: 15px;
-  background-color: #f9f9f9;
+  background-color: white;
   border-radius: 8px;
   margin-bottom: 15px;
 }
 
 .writerFollow {
   display: flex;
-  justify-content: center;
   font-size: 14px;
   color: gray;
-  margin-bottom: 15px;
+  margin: 20px 0px 20px 10px;
 }
 
 .followButton {
@@ -366,7 +366,7 @@
 }
 
 .followButton:hover {
-  transform: scale(1.03);
+  transform: scale(1.01);
 }
 
 .followCancelButton {
@@ -386,5 +386,5 @@
 }
 
 .followCancelButton:hover {
-  transform: scale(1.03);
+  transform: scale(1.01);
 }

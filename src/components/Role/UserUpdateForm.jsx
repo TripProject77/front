@@ -46,9 +46,10 @@ const UserUpdateForm = () => {
       console.log(response.data);
 
       if (response.status === 200) {
-        await getUserInfo(); // 수정 후에 다시 최신 정보 로드
+        await getUserInfo(); 
 
         alert("회원 정보 수정 성공 !!");
+        navigate("/user");
       } else {
         alert("회원 정보 수정 실패 !!");
       }

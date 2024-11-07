@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "../Header/Header";
 import "./Follow.css";
 import * as auth from "../../api/auth";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const Follow = () => {
   const [activeTab, setActiveTab] = useState("follower");
@@ -28,7 +29,7 @@ const Follow = () => {
 
       const followers = data.filter((user) =>
         user.userFollowMap?.some(
-          (followMap) => followMap.follow.followName === userInfo.name
+          (followMap) => followMap.follow.followName === userInfo?.name
         )
       );
 
@@ -61,6 +62,12 @@ const Follow = () => {
 
       if (response.status === 200) {
         alert("팔로우 취소 성공!");
+
+        setUserInfo((prev) => ({
+          ...prev,
+          follow: prev.follow.filter((user) => user !== writerName),
+        }));
+        getFollowerList();
       } else {
         alert("팔로우 취소 실패!");
       }
@@ -115,13 +122,11 @@ const Follow = () => {
               {followerList.length > 0 ? (
                 followerList.map((user) => (
                   <div key={user.id} className="follow-card">
-                    <p className="user-name"> · {user.name}</p>
-                    <button
-                      className="follow-button"
-                      onClick={() => handleFollowCancel(user.name)} // user.name 전달
-                      >
-                      팔로우 취소
-                    </button>
+                    <p className="user-name">
+                      <span className="icon-and-name">
+                        <FaRegUserCircle className="user-icon" /> {user.name}
+                      </span>
+                    </p>
                   </div>
                 ))
               ) : (
@@ -133,9 +138,18 @@ const Follow = () => {
             <div className="follow-list">
               {followingList.length > 0 ? (
                 followingList.map((user) => (
-                  <div className="follow-card">
-                    <p className="user-name"> · {user}</p>
-                    <button className="follow-button">팔로우 취소</button>
+                  <div className="follow-card" key={user}>
+                    <p className="user-name">
+                      <span className="icon-and-name">
+                        <FaRegUserCircle className="user-icon" /> {user}
+                      </span>
+                    </p>
+                    <button
+                      className="follow-button"
+                      onClick={() => handleFollowCancel(user)}
+                    >
+                      팔로우 취소
+                    </button>
                   </div>
                 ))
               ) : (
