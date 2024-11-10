@@ -80,6 +80,16 @@
   font-size: 14px;
 }
 
+.btn_message_box {
+  color: rgb(0, 206, 124);
+  border: 1px solid rgb(0, 206, 124);
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
 .btn_my_self:hover {
     transform: scale(1.03);
 }

@@ -183,7 +183,7 @@ const Post = () => {
             </form>
             <button onClick={handleClick}>새 글 작성</button>
           </div>
-</div>
+        </div>
         <hr style={{ marginBottom: "50px;" }} />
 
         <div className="postCard-container">

@@ -21,8 +21,10 @@ export const info = () => api.get(`/user/info`)
 // 유저 리스트
 export const list = () => api.get("/user/userList");
 
+// 팔로우
 export const follow = (name) => api.post(`/user/${name}/follow`)
 
+// 팔로우 취소
 export const followCancel = (name) => api.delete(`/user/${name}/delete/follow`)
 
 // ------------ 게시물 -------------
@@ -45,10 +47,17 @@ export const postInfo = (id) => api.get(`/post/info/${id}`);
 // 게시물 리스트
 export const postList = () => api.get("/post/postList");
 
+// 게시글 작성자 정보
 export const postWriterInfo = (name) => api.get(`/user/postWriterInfo/${name}`)
 
+// 게시글 업데이트 상태
 export const postUpdateStatus = (id) => api.post(`/post/update/${id}/status`);
 
+// 동행 참여
+export const participate = (postId) => api.post(`/post/${postId}/participate`)
+
+// 동행 참여 취소
+export const participateCancel = (id) => api.delete(`/post/delete/participate/${id}`)
 
 // ------------ 댓글 -------------
 
@@ -72,6 +81,15 @@ export const getPostImage = (postId) => api.get(`/file/${postId}/postImage`);
 
 export const uploadProfileImage = (username, data) => api.post(`/file/uploadProfileImage/${username}`, data);
 
-export const participate = (postId) => api.post(`/post/${postId}/participate`)
+// ------------ 쪽지 -------------
 
-export const participateCancel = (id) => api.delete(`/post/delete/participate/${id}`)
+export const messageWrite = (data) => api.post(`/message/writeMessage`, data)
+
+export const sendedMessage = () => api.get(`/message/sendMessage`);
+
+export const receiveMessage = () => api.get(`/message/receiveMessage`);
+
+
+export const deleteReceiveMessage = (messageId) => api.delete(`/message/received/delete/${messageId}`)
+
+export const deleteSendMessage = (messageId) => api.delete(`/message/sended/delete/${messageId}`)

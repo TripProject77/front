@@ -83,3 +83,18 @@
 .follow-button:hover {
   transform: scale(1.03);
 }
+
+.message-button {
+  padding: 6px 12px;
+  border: none;
+  cursor: pointer;
+  color: green;
+  border: 1px solid green;
+  background-color: white;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+
+.message-button:hover {
+  transform: scale(1.03);
+}

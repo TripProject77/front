@@ -3,8 +3,12 @@ import Header from "../Header/Header";
 import "./Follow.css";
 import * as auth from "../../api/auth";
 import { FaRegUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 const Follow = () => {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState("follower");
   const [userInfo, setUserInfo] = useState();
 
@@ -76,6 +80,10 @@ const Follow = () => {
     }
   };
 
+  const handleMessage = (user) => {
+    navigate('/Message', { state: { user } });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await getUserInfo();
@@ -144,12 +152,20 @@ const Follow = () => {
                         <FaRegUserCircle className="user-icon" /> {user}
                       </span>
                     </p>
+                    <div>
                     <button
                       className="follow-button"
                       onClick={() => handleFollowCancel(user)}
                     >
                       팔로우 취소
                     </button>
+                    <button
+                      className="message-button"
+                      onClick={() => handleMessage(user)}
+                    >
+                      쪽지 작성
+                    </button>
+                    </div>
                   </div>
                 ))
               ) : (
