@@ -166,6 +166,7 @@ export const UserForm = ({ userInfo, updateUser }) => {
           </button>
         </div>
 
+        
         <div className="follow">
           <p>
             <span onClick={handleFollow} style={{ cursor: "pointer" }}>
@@ -176,7 +177,14 @@ export const UserForm = ({ userInfo, updateUser }) => {
               팔로잉 {followingList?.length}
             </span>
           </p>
+          <button
+            className="btn_message_box"
+            onClick={() => navigate(`/MessageBox`)}
+          >
+            쪽지함
+          </button>
         </div>
+
 
         <button
           className="update_user_btn"

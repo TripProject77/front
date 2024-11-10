@@ -1,0 +1,77 @@
+.messageBox-container {
+  width: 70%;
+  height: 500px;
+  margin: 100px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 11px;
+  box-shadow: 0 1.2rem 1.2rem rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.messageBox-container p {
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+table {
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+td {
+  padding: 15px;
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.messageBox-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.messageBox-tab-button {
+  flex: 1;
+  padding: 10px 0;
+  margin: 5px 0;
+  border: none;
+  background-color: lightgray;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.messageBox-tab-button.active {
+  background-color: lightseagreen;
+  color: white;
+  font-size: 18px;
+}
+
+.messageBox-tab-content {
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.messageBox-tab-content tr {
+  font-size: 18px;
+}
+
+.btn-message-delete {
+  padding: 10px 15px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 15px;
+}
+
+.btn-message-delete:hover {
+    transform: scale(1.02);
+}

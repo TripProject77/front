@@ -546,7 +546,7 @@ const PostInfo = () => {
             <button className="followCancelButton" onClick={handleFollowCancel}>
               팔로우 취소
             </button>
-          ) : postInfo.writer === userInfo.username ? (
+          ) : postInfo.writer === userInfo.name ? (
             <button className="followButton" onClick={handleMyPage}>
               마이페이지
             </button>
